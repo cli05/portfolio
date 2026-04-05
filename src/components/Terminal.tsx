@@ -6,6 +6,22 @@ import OutputRenderer from './OutputRenderer';
 
 const PROMPT = 'caleb@portfolio:~$';
 
+const TURTLE_BG = `                             ___-------___
+                          _-~~             ~~-_
+                       _-~                    /~-_
+    /^\\__/^\\         /~  \\                   /    \\
+  /|  O|| O|        /      \\_______________/        \\
+ | |___||__|      /       /                \\          \\
+ |          \\    /      /                    \\          \\
+ |   (_______) /______/                        \\_________ \\
+ |         / /         \\                      /            \\
+  \\         \\^\\\\         \\                  /               \\     /
+    \\         ||           \\______________/      _-_       //\\__//
+      \\       ||------_-~~-_ ------------- \\ --/~   ~\\    || __/
+        ~-----||====/~     |==================|       |/~~~~~
+         (_(__/  ./     /                    \\_\\      \\.
+                (_(___/                         \\_____)_)`;
+
 // ─── State ────────────────────────────────────────────────────────────────────
 
 interface State {
@@ -218,13 +234,24 @@ export default function Terminal() {
       class="flex flex-col h-screen w-full max-w-5xl mx-auto px-4 py-6"
       onClick={focusInput}
     >
+      {/* Background turtle watermark */}
+      <div
+        class="fixed inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none"
+        style={{ zIndex: 1, opacity: 0.15 }}
+        aria-hidden="true"
+      >
+        <pre
+          class="text-terminal-amber font-mono"
+          style={{ fontSize: '2.4vw', lineHeight: '1.4', margin: 0 }}
+        >{TURTLE_BG}</pre>
+      </div>
       {/* Persistent banner */}
-      <div class="shrink-0">
+      <div class="relative shrink-0" style={{ zIndex: 2 }}>
         <OutputRenderer nodes={commands.banner!({ args: [], allCommands: commandNames }).nodes} />
       </div>
 
       {/* Command chips */}
-      <div class="flex flex-wrap gap-2 pb-3 shrink-0">
+      <div class="relative flex flex-wrap gap-2 pb-3 shrink-0" style={{ zIndex: 2 }}>
         {CHIPS.map(cmd => (
           <button
             key={cmd}
@@ -239,7 +266,8 @@ export default function Terminal() {
 
       {/* History + inline input */}
       <div
-        class="flex-1 overflow-y-auto pb-4 select-text"
+        class="relative flex-1 overflow-y-auto pb-4 select-text"
+        style={{ zIndex: 2 }}
         role="log"
         aria-live="polite"
         aria-atomic="false"

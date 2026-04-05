@@ -188,9 +188,10 @@ export default function Terminal() {
     inputRef.current?.focus();
   }
 
+  // add max-w-5xl mx-auto in first class component to make it center
   return (
     <div
-      class="flex flex-col h-screen w-full max-w-5xl mx-auto px-4 py-6 cursor-text"
+      class="flex flex-col h-screen w-full px-4 py-6 cursor-text"
       onClick={focusInput}
     >
       {/* Output history */}

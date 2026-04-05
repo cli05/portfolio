@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /Users/calebli/Documents/Projects/portfolio log --oneline -5)",
+      "Bash(git -C /Users/calebli/Documents/Projects/portfolio status)",
+      "Bash(npm --version)",
+      "Bash(npm info:*)",
+      "Bash(node -e \"const p = require\\('./node_modules/astro/package.json'\\); console.log\\('astro:', p.version\\)\")",
+      "Bash(node -e \"const p = require\\('./node_modules/@astrojs/preact/package.json'\\); console.log\\('preact-int:', p.version\\)\")",
+      "Bash(node -e \"const p = require\\('./node_modules/@astrojs/tailwind/package.json'\\); console.log\\('tailwind-int:', p.version\\)\")",
+      "Bash(node -e \"const p = require\\('./node_modules/tailwindcss/package.json'\\); console.log\\('tailwind:', p.version\\)\")",
+      "Bash(npm run:*)"
+    ]
+  }
+}

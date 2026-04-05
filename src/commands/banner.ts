@@ -1,0 +1,21 @@
+import type { CommandHandler } from './types';
+
+const ASCII_ART = `
+   ██████╗ █████╗ ██╗     ███████╗██████╗
+   ██╔════╝██╔══██╗██║     ██╔════╝██╔══██╗
+   ██║     ███████║██║     █████╗  ██████╔╝
+   ██║     ██╔══██║██║     ██╔══╝  ██╔══██╗
+   ╚██████╗██║  ██║███████╗███████╗██████╔╝
+   ╚═════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═════╝`.trimStart();
+
+export const banner: CommandHandler = () => ({
+  nodes: [
+    { type: 'pre',   content: ASCII_ART },
+    { type: 'blank' },
+    { type: 'text',  content: 'Caleb Li  —  Software Engineer', style: 'bright' },
+    { type: 'text',  content: 'San Francisco, CA', style: 'dim' },
+    { type: 'blank' },
+    { type: 'text',  content: "Type 'help' to see available commands.", style: 'dim' },
+    { type: 'blank' },
+  ],
+});

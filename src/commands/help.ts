@@ -18,10 +18,15 @@ const COMMANDS: [string, string][] = [
 
 export const help: CommandHandler = () => ({
   nodes: [
-    { type: 'text',  content: 'Available commands:', style: 'accent' },
+    { type: 'text', content: 'Available commands:', style: 'accent' },
     { type: 'blank' },
-    { type: 'table', rows: COMMANDS },
+    ...COMMANDS.map(([cmd, desc]) => ({
+      type: 'command_link' as const,
+      label: cmd,
+      command: cmd.includes(' ') ? '' : cmd, // don't auto-run parameterised commands
+      description: desc,
+    })),
     { type: 'blank' },
-    { type: 'text',  content: 'Tip: use ↑/↓ to navigate history, Tab to autocomplete.', style: 'dim' },
+    { type: 'text', content: 'Tip: use ↑/↓ to navigate history, Tab to autocomplete.', style: 'dim' },
   ],
 });

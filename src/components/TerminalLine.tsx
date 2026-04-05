@@ -11,9 +11,10 @@ export interface HistoryEntry {
 
 interface Props {
   entry: HistoryEntry;
+  onCommand?: (cmd: string) => void;
 }
 
-export default function TerminalLine({ entry }: Props) {
+export default function TerminalLine({ entry, onCommand }: Props) {
   if (entry.kind === 'command') {
     return (
       <div class="flex items-start gap-2 leading-relaxed select-text">
@@ -24,7 +25,7 @@ export default function TerminalLine({ entry }: Props) {
   }
 
   if (entry.nodes && entry.nodes.length > 0) {
-    return <OutputRenderer nodes={entry.nodes} />;
+    return <OutputRenderer nodes={entry.nodes} onCommand={onCommand} />;
   }
 
   return null;

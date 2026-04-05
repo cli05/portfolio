@@ -18,6 +18,7 @@ interface State {
 type Action =
   | { type: 'SET_INPUT'; value: string }
   | { type: 'SUBMIT' }
+  | { type: 'EXECUTE'; command: string }
   | { type: 'HISTORY_UP' }
   | { type: 'HISTORY_DOWN' }
   | { type: 'TAB_COMPLETE' }
@@ -125,6 +126,25 @@ function reducer(state: State, action: Action): State {
       };
     }
 
+    case 'EXECUTE': {
+      const raw = action.command.trim();
+      if (!raw) return state;
+      const cmdEntry = newEntry({ kind: 'command', prompt: PROMPT, command: raw });
+      const result = runCommand(raw);
+      const newCmdHistory = [...state.cmdHistory, raw];
+      if (result.clear) {
+        return { ...state, history: [], inputValue: '', cmdHistory: newCmdHistory, historyIndex: -1 };
+      }
+      const outEntry = newEntry({ kind: 'output', nodes: result.nodes });
+      return {
+        ...state,
+        history: [...state.history, cmdEntry, outEntry],
+        inputValue: '',
+        cmdHistory: newCmdHistory,
+        historyIndex: -1,
+      };
+    }
+
     case 'CLEAR':
       return { ...state, history: [], inputValue: '' };
 
@@ -185,6 +205,13 @@ export default function Terminal() {
     inputRef.current?.focus();
   }
 
+  function execute(cmd: string) {
+    dispatch({ type: 'EXECUTE', command: cmd });
+    inputRef.current?.focus();
+  }
+
+  const CHIPS = ['help', 'about', 'projects', 'skills', 'contact', 'resume'];
+
   // add/remove max-w-5xl mx-auto in first class component to make it center
   return (
     <div
@@ -196,7 +223,21 @@ export default function Terminal() {
         <OutputRenderer nodes={commands.banner!({ args: [], allCommands: commandNames }).nodes} />
       </div>
 
-      {/* Output history */}
+      {/* Command chips */}
+      <div class="flex flex-wrap gap-2 pb-3 shrink-0">
+        {CHIPS.map(cmd => (
+          <button
+            key={cmd}
+            type="button"
+            onClick={e => { e.stopPropagation(); execute(cmd); }}
+            class="px-3 py-0.5 border border-terminal-amber text-terminal-amber text-sm hover:bg-terminal-amber hover:text-terminal-bg transition-colors cursor-pointer"
+          >
+            {cmd}
+          </button>
+        ))}
+      </div>
+
+      {/* History + inline input */}
       <div
         class="flex-1 overflow-y-auto pb-4 select-text"
         role="log"
@@ -205,34 +246,33 @@ export default function Terminal() {
         aria-label="terminal output"
       >
         {state.history.map(entry => (
-          <TerminalLine key={entry.id} entry={entry} />
+          <TerminalLine key={entry.id} entry={entry} onCommand={execute} />
         ))}
-        <div ref={bottomRef} />
-      </div>
 
-      {/* Input line */}
-      <div class="flex items-center gap-2 border-t-2 border-terminal-amber pt-3 shrink-0">
-        <span class="text-terminal-amber shrink-0 select-none">{PROMPT}</span>
-        <div class="relative flex-1">
-          {/* Visible typed text + blinking cursor */}
-          <div class="text-terminal-bright pointer-events-none leading-relaxed">
-            {state.inputValue}
-            <span class="inline-block w-2 h-5 bg-terminal-amber align-middle ml-px animate-blink" />
+        {/* Inline input prompt */}
+        <div class="flex items-center gap-2">
+          <span class="text-terminal-amber shrink-0 select-none">{PROMPT}</span>
+          <div class="relative flex-1">
+            <div class="text-terminal-bright pointer-events-none leading-relaxed">
+              {state.inputValue}
+              <span class="inline-block w-2 h-5 bg-terminal-amber align-middle ml-px animate-blink" />
+            </div>
+            <input
+              ref={inputRef}
+              value={state.inputValue}
+              onInput={e => dispatch({ type: 'SET_INPUT', value: (e.target as HTMLInputElement).value })}
+              onKeyDown={handleKeyDown}
+              class="absolute inset-0 w-full opacity-0 cursor-default"
+              aria-label="terminal input"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck={false}
+            />
           </div>
-          {/* Real (invisible) input for keyboard capture */}
-          <input
-            ref={inputRef}
-            value={state.inputValue}
-            onInput={e => dispatch({ type: 'SET_INPUT', value: (e.target as HTMLInputElement).value })}
-            onKeyDown={handleKeyDown}
-            class="absolute inset-0 w-full opacity-0 cursor-default"
-            aria-label="terminal input"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck={false}
-          />
         </div>
+
+        <div ref={bottomRef} />
       </div>
     </div>
   );

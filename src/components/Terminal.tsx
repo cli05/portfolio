@@ -2,6 +2,7 @@ import { useReducer, useEffect, useRef } from 'preact/hooks';
 import type { OutputNode } from '../commands/types';
 import { commands, commandNames } from '../commands/index';
 import TerminalLine, { type HistoryEntry } from './TerminalLine';
+import OutputRenderer from './OutputRenderer';
 
 const PROMPT = 'caleb@portfolio:~$';
 
@@ -46,13 +47,8 @@ function newEntry(overrides: Partial<HistoryEntry> & { kind: HistoryEntry['kind'
 function reducer(state: State, action: Action): State {
   switch (action.type) {
 
-    case 'BOOT': {
-      const result = commands.banner!({ args: [], allCommands: commandNames });
-      return {
-        ...state,
-        history: [newEntry({ kind: 'output', nodes: result.nodes })],
-      };
-    }
+    case 'BOOT':
+      return state;
 
     case 'SET_INPUT':
       return { ...state, inputValue: action.value, historyIndex: -1 };
@@ -192,9 +188,14 @@ export default function Terminal() {
   // add/remove max-w-5xl mx-auto in first class component to make it center
   return (
     <div
-      class="flex flex-col h-screen w-full max-w-5xl mx-auto px-4 py-6 cursor-text"
+      class="flex flex-col h-screen w-full max-w-5xl mx-auto px-4 py-6"
       onClick={focusInput}
     >
+      {/* Persistent banner */}
+      <div class="shrink-0">
+        <OutputRenderer nodes={commands.banner!({ args: [], allCommands: commandNames }).nodes} />
+      </div>
+
       {/* Output history */}
       <div
         class="flex-1 overflow-y-auto pb-4 select-text"

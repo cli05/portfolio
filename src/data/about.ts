@@ -4,7 +4,7 @@ export const role = 'Software Engineer';
 export const location = 'San Francisco, CA';
 
 export const bio = [
-  'Full-stack software engineer with a passion for building clean, performant tools and systems.',
+  'Full-stack software engineer with a passion for building scalable and impactful applications.',
   'I enjoy working across the stack — from low-level systems programming to polished user interfaces.',
   'When I\'m not writing code, I\'m probably hiking, reading, or tinkering with side projects.',
 ];

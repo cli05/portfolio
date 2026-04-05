@@ -11,6 +11,7 @@ import { whoami }      from './whoami';
 import { dateCmd }     from './date';
 import { ls }          from './ls';
 import { cat }         from './cat';
+import { themeCmd }    from './theme';
 
 export const commands: Record<string, CommandHandler> = {
   banner,
@@ -25,6 +26,7 @@ export const commands: Record<string, CommandHandler> = {
   date:     dateCmd,
   ls,
   cat,
+  theme: themeCmd,
 };
 
 export const commandNames = Object.keys(commands).filter(k => k !== 'banner');

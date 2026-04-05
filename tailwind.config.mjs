@@ -5,13 +5,13 @@ export default {
     extend: {
       colors: {
         terminal: {
-          bg:      '#0d0d0d',
-          surface: '#1a1400',
-          amber:   '#ffb347',
-          bright:  '#ffd580',
-          dim:     '#8b7355',
-          white:   '#ffe4b5',
-          red:     '#ff6b6b',
+          bg:      'var(--color-bg)',
+          surface: 'var(--color-surface)',
+          amber:   'var(--color-amber)',
+          bright:  'var(--color-bright)',
+          dim:     'var(--color-dim)',
+          white:   'var(--color-white)',
+          red:     'var(--color-red)',
         },
       },
       fontFamily: {

@@ -14,6 +14,7 @@ const COMMANDS: [string, string][] = [
   ['cat <cmd>',     'Show help for a specific command'],
   ['clear',         'Clear the terminal'],
   ['banner',        'Show the welcome banner'],
+  ['theme',         'Toggle dark/light mode (or: theme dark | theme light)'],
 ];
 
 export const help: CommandHandler = () => ({

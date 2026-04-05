@@ -4,46 +4,118 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Theme ──────────────────────────────────────────────────────────────────
+   Edit only these blocks to retheme the entire site.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Dark mode (default) */
+:root {
+  --color-bg:      #070e08;
+  --color-surface: #0d1a0f;
+  --color-amber:   #5a9e72;
+  --color-bright:  #90c4a6;
+  --color-dim:     #3d5e48;
+  --color-white:   #c0d9c8;
+  --color-red:     #d96b6b;
+}
+
+/* Light mode — auto from system preference */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --color-bg:      #f2f8f4;
+    --color-surface: #e0ede5;
+    --color-amber:   #2d7a4f;
+    --color-bright:  #1a5235;
+    --color-dim:     #6a9278;
+    --color-white:   #102a1c;
+    --color-red:     #b83030;
+  }
+}
+
+/* Light mode — forced via command */
+:root[data-theme="light"] {
+  --color-bg:      #f2f8f4;
+  --color-surface: #e0ede5;
+  --color-amber:   #2d7a4f;
+  --color-bright:  #1a5235;
+  --color-dim:     #6a9278;
+  --color-white:   #102a1c;
+  --color-red:     #b83030;
+}
+
+/* Dark mode — forced via command (restores defaults) */
+:root[data-theme="dark"] {
+  --color-bg:      #070e08;
+  --color-surface: #0d1a0f;
+  --color-amber:   #5a9e72;
+  --color-bright:  #90c4a6;
+  --color-dim:     #3d5e48;
+  --color-white:   #c0d9c8;
+  --color-red:     #d96b6b;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────── */
+
 * {
   box-sizing: border-box;
 }
 
 html, body {
-  background-color: #0d0d0d;
-  color: #ffe4b5;
+  background-color: var(--color-bg);
+  color: var(--color-white);
   font-family: 'JetBrains Mono', ui-monospace, monospace;
   margin: 0;
   padding: 0;
   height: 100%;
 }
 
-/* Thin amber scrollbar */
+/* Thin scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0d0d0d;
+  background: var(--color-bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: #ffb347;
+  background: var(--color-amber);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #ffd580;
+  background: var(--color-bright);
 }
 
 /* Selection color */
 ::selection {
-  background: #ffb34744;
-  color: #ffd580;
+  background: color-mix(in srgb, var(--color-amber) 27%, transparent);
+  color: var(--color-bright);
 }
+
+/* ─── Terminal color overrides ────────────────────────────────────────────────
+   Force Tailwind terminal-* utility classes to use CSS variables so that
+   theme switching at runtime actually takes effect. Tailwind resolves color
+   tokens to static hex values at build time; these rules (outside @layer) win
+   by cascade order and keep the values dynamic.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.text-terminal-amber               { color: var(--color-amber); }
+.text-terminal-bright              { color: var(--color-bright); }
+.text-terminal-dim                 { color: var(--color-dim); }
+.text-terminal-white               { color: var(--color-white); }
+.text-terminal-red                 { color: var(--color-red); }
+.bg-terminal-bg                    { background-color: var(--color-bg); }
+.bg-terminal-surface               { background-color: var(--color-surface); }
+.bg-terminal-amber                 { background-color: var(--color-amber); }
+.border-terminal-amber             { border-color: var(--color-amber); }
+.hover\:bg-terminal-amber:hover    { background-color: var(--color-amber); }
+.hover\:text-terminal-amber:hover  { color: var(--color-amber); }
+.hover\:text-terminal-bg:hover     { color: var(--color-bg); }
 
 /* Links in terminal output */
 .terminal-link {
-  color: #ffd580;
+  color: var(--color-bright);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .terminal-link:hover {
-  color: #ffb347;
+  color: var(--color-amber);
 }

@@ -183,6 +183,14 @@ export default function Terminal() {
   const inputRef  = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  // Restore saved theme preference
+  useEffect(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark' || saved === 'light') {
+      document.documentElement.dataset.theme = saved;
+    }
+  }, []);
+
   // Boot banner
   useEffect(() => {
     dispatch({ type: 'BOOT' });
@@ -237,7 +245,7 @@ export default function Terminal() {
       {/* Background turtle watermark */}
       <div
         class="fixed inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none"
-        style={{ zIndex: 1, opacity: 0.15 }}
+        style={{ zIndex: 1, opacity: 0.3 }}
         aria-hidden="true"
       >
         <pre

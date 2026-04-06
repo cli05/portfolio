@@ -265,7 +265,7 @@ export default function Terminal() {
             key={cmd}
             type="button"
             onClick={e => { e.stopPropagation(); execute(cmd); }}
-            class="px-3 py-0.5 border border-terminal-amber text-terminal-amber text-sm hover:bg-terminal-amber hover:text-terminal-bg transition-colors cursor-pointer"
+            class="px-3 py-0.5 border border-terminal-amber text-terminal-amber bg-terminal-bg text-sm hover:bg-terminal-amber hover:text-terminal-bg transition-colors cursor-pointer"
           >
             {cmd}
           </button>

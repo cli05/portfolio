@@ -14,7 +14,7 @@
   --color-surface: #0d1a0f;
   --color-amber:   #5a9e72;
   --color-bright:  #90c4a6;
-  --color-dim:     #3d5e48;
+  --color-dim:     #9ea9a1;
   --color-white:   #c0d9c8;
   --color-red:     #d96b6b;
 }
@@ -22,11 +22,11 @@
 /* Light mode — auto from system preference */
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
-    --color-bg:      #f2f8f4;
+    --color-bg:      #fff8de;
     --color-surface: #e0ede5;
     --color-amber:   #2d7a4f;
     --color-bright:  #1a5235;
-    --color-dim:     #6a9278;
+    --color-dim:     #102a1c;
     --color-white:   #102a1c;
     --color-red:     #b83030;
   }
@@ -34,11 +34,11 @@
 
 /* Light mode — forced via command */
 :root[data-theme="light"] {
-  --color-bg:      #f2f8f4;
+  --color-bg:      #fff8de;
   --color-surface: #e0ede5;
   --color-amber:   #2d7a4f;
   --color-bright:  #1a5235;
-  --color-dim:     #6a9278;
+  --color-dim:     #102a1c;
   --color-white:   #102a1c;
   --color-red:     #b83030;
 }
@@ -49,10 +49,12 @@
   --color-surface: #0d1a0f;
   --color-amber:   #5a9e72;
   --color-bright:  #90c4a6;
-  --color-dim:     #3d5e48;
+  --color-dim:     #9ea9a1;
   --color-white:   #c0d9c8;
   --color-red:     #d96b6b;
 }
+
+/* 3d5e48 */ 
 
 /* ─────────────────────────────────────────────────────────────────────────── */
 

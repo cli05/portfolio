@@ -12,6 +12,7 @@ import { dateCmd }     from './date';
 import { ls }          from './ls';
 import { cat }         from './cat';
 import { themeCmd }    from './theme';
+import { turtleCmd }   from './turtle';
 
 export const commands: Record<string, CommandHandler> = {
   banner,
@@ -27,6 +28,7 @@ export const commands: Record<string, CommandHandler> = {
   ls,
   cat,
   theme: themeCmd,
+  turtle: turtleCmd,
 };
 
-export const commandNames = Object.keys(commands).filter(k => k !== 'banner');
+export const commandNames = Object.keys(commands).filter(k => !['banner', 'turtle'].includes(k));

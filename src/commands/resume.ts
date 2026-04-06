@@ -1,21 +1,16 @@
 import type { CommandHandler } from './types';
+import { resume as resumeData } from '../data/resume';
 
 export const resume: CommandHandler = () => ({
   nodes: [
     { type: 'text',  content: 'Resume', style: 'accent' },
     { type: 'blank' },
     { type: 'text',  content: 'Experience:', style: 'bright' },
-    { type: 'table', rows: [
-      ['2023–present', 'Senior Software Engineer  ·  Acme Corp'],
-      ['2021–2023',    'Software Engineer  ·  Startup Inc'],
-      ['2019–2021',    'Junior Engineer  ·  Agency Co'],
-    ]},
+    { type: 'table', rows: resumeData.experience.map(e => [e.period, `${e.title}  ·  ${e.org}`]) },
     { type: 'blank' },
     { type: 'text',  content: 'Education:', style: 'bright' },
-    { type: 'table', rows: [
-      ['2015–2019', 'B.S. Computer Science  ·  University of California, Berkeley'],
-    ]},
+    { type: 'table', rows: resumeData.education.map(e => [e.period, `${e.title}  ·  ${e.org}`]) },
     { type: 'blank' },
-    { type: 'link',  label: 'Download PDF resume', href: '/resume.pdf' },
+    ...(resumeData.pdfUrl ? [{ type: 'link' as const, label: 'Download PDF resume', href: resumeData.pdfUrl }] : []),
   ],
 });

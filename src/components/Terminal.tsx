@@ -239,7 +239,7 @@ export default function Terminal() {
   // add/remove max-w-5xl mx-auto in first class component to make it center
   return (
     <div
-      class="flex flex-col h-screen w-full max-w-5xl mx-auto px-4 py-6"
+      class="flex flex-col h-full w-full max-w-5xl mx-auto px-4 py-6"
       onClick={focusInput}
     >
       {/* Background turtle watermark */}

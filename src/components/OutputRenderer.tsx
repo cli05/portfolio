@@ -15,6 +15,13 @@ const styleClass: Record<string, string> = {
 
 function Node({ node, onCommand }: { node: OutputNode; onCommand?: (cmd: string) => void }) {
   switch (node.type) {
+    case 'heading':
+      return (
+        <div class="text-2xl font-bold text-terminal-bright leading-tight">
+          {node.content}
+        </div>
+      );
+
     case 'text':
       return (
         <div class={`leading-relaxed ${node.style ? styleClass[node.style] : 'text-terminal-white'}`}>

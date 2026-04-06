@@ -121,3 +121,23 @@ html, body {
 .terminal-link:hover {
   color: var(--color-amber);
 }
+
+/* ─── Terminal overlay animation ─────────────────────────────────────────────
+   Slides in from below the viewport when .is-open is added.
+   Always mounted in the DOM to preserve terminal session state.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.terminal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: var(--color-bg);
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.terminal-overlay.is-open {
+  transform: translateY(0);
+  pointer-events: auto;
+}

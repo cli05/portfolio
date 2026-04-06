@@ -1,4 +1,5 @@
 export type OutputNode =
+  | { type: 'heading'; content: string }
   | { type: 'text'; content: string; style?: 'dim' | 'success' | 'error' | 'accent' | 'bright' }
   | { type: 'link'; label: string; href: string }
   | { type: 'command_link'; label: string; command: string; description?: string }

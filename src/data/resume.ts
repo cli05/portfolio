@@ -17,7 +17,7 @@ export const resume: Resume = {
     { period: '2019–2021',    title: 'Junior Engineer',          org: 'Agency Co' },
   ],
   education: [
-    { period: '2015–2019', title: 'B.S. Computer Science', org: 'University of California, Berkeley' },
+    { period: '2024-Present', title: 'B.S. Computer Science & Mathematics', org: 'Purdue University' },
   ],
   pdfUrl: '/resume.pdf',
 };

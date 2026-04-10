@@ -42,7 +42,7 @@ export default function Portfolio({ onOpenTerminal }: Props) {
             <p class="text-gray-500 text-sm">{role}  ·  {location}</p>
           </div>
           <div class="space-y-3 text-gray-700 leading-relaxed mb-8">
-            {bio.map((p, i) => <p key={i}>{p}</p>)}
+            {bio.split('\n\n').map((p, i) => <p key={i}>{p}</p>)}
           </div>
           <div class="flex gap-4">
             {links.map(l => (

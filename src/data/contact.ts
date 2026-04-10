@@ -5,7 +5,7 @@ export interface ContactChannel {
 }
 
 export const channels: ContactChannel[] = [
-  { label: 'email',    value: 'caleb@example.com',             url: 'mailto:caleb@example.com' },
-  { label: 'github',   value: 'github.com/calebli',            url: 'https://github.com/calebli' },
-  { label: 'linkedin', value: 'linkedin.com/in/calebli',       url: 'https://linkedin.com/in/calebli' },
+  { label: 'email',    value: 'caleb.jesseli@gmail.com',             url: 'mailto:caleb.jesseli@gmail.com' },
+  { label: 'github',   value: 'github.com/cli05',            url: 'https://github.com/cli05' },
+  { label: 'linkedin', value: 'linkedin.com/in/caleb-j-li/',       url: 'https://www.linkedin.com/in/caleb-j-li/' },
 ];

@@ -1,7 +1,7 @@
 export const name = 'Caleb Li';
 export const username = 'caleb';
-export const role = 'Software Engineer';
-export const location = 'San Francisco, CA';
+export const role = 'Software Engineer, Machine Learning Enthusiast';
+export const location = 'West Lafayette, IN';
 
 export const bio = [
   'Full-stack software engineer with a passion for building scalable and impactful applications.',

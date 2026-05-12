@@ -69,29 +69,47 @@ html {
 html, body {
   background-color: var(--color-bg);
   color: var(--color-white);
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-family: 'Georgia', serif;
   margin: 0;
   padding: 0;
   height: 100%;
 }
 
-/* Thin scrollbar */
+/* Thin scrollbar — neutral for the portfolio section */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-bg);
+  background: #f0f0f0;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-amber);
+  background: #999;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Selection color — neutral for the portfolio section */
+::selection {
+  background: rgba(0, 0, 0, 0.15);
+  color: inherit;
+}
+
+/* Scrollbar overrides inside the terminal overlay */
+.terminal-overlay ::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+.terminal-overlay ::-webkit-scrollbar-thumb {
+  background: var(--color-amber);
+  border-radius: 3px;
+}
+.terminal-overlay ::-webkit-scrollbar-thumb:hover {
   background: var(--color-bright);
 }
 
-/* Selection color */
-::selection {
+/* Selection color inside the terminal overlay */
+.terminal-overlay ::selection {
   background: color-mix(in srgb, var(--color-amber) 27%, transparent);
   color: var(--color-bright);
 }

@@ -4,15 +4,15 @@ export const role = 'software engineer, ml enthusiast';
 export const location = 'West Lafayette, IN';
 
 export const bio = `
-Full-stack software engineer with a passion for building scalable and impactful applications.
+CS + Math student at Purdue with hands-on experience across the full stack — from React frontends and REST APIs to ML pipelines and LLM systems.
 
-I enjoy working across the stack — from low-level systems programming to polished user interfaces.
+I've built production apps at Tencent, contributed to a YC-backed RAG evaluation platform, and shipped a learning management system serving 200+ students in Ghana.
 
-When I'm not writing code, I'm probably hiking, reading, or tinkering with side projects.
+Currently interning at Visa this summer and TAing Purdue's C programming course for ~600 students.
 `.trim();
 
 export const links = [
   { label: 'GitHub',   url: 'https://github.com/cli05' },
   { label: 'LinkedIn', url: 'https://www.linkedin.com/in/caleb-j-li/' },
-  { label: 'Email',    url: 'caleb.jesseli@gmail.com' },
+  { label: 'Email',    url: 'mailto:caleb.jesseli@gmail.com' },
 ];

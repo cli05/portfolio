@@ -12,12 +12,14 @@ export interface Resume {
 
 export const resume: Resume = {
   experience: [
-    { period: '2023–present', title: 'Senior Software Engineer', org: 'Acme Corp' },
-    { period: '2021–2023',    title: 'Software Engineer',        org: 'Startup Inc' },
-    { period: '2019–2021',    title: 'Junior Engineer',          org: 'Agency Co' },
+    { period: 'May 2026 – Aug 2026',  title: 'Software Engineer Intern',          org: 'Visa · Highlands Ranch, CO' },
+    { period: 'Jan 2026 – Present',   title: 'Undergraduate Teaching Assistant',  org: 'Purdue CS · West Lafayette, IN' },
+    { period: 'Oct 2025 – Present',   title: 'Software Developer',                org: 'Volunteer Partnerships for West Africa · West Lafayette, IN' },
+    { period: 'Sep 2025 – Present',   title: 'AI Research Engineer',              org: 'Captain (YC\'W26) · West Lafayette, IN' },
+    { period: 'Jun 2025 – Aug 2025',  title: 'Software Engineer Intern',          org: 'Tencent Americas · Palo Alto, CA' },
   ],
   education: [
-    { period: '2024-Present', title: 'B.S. Computer Science & Mathematics', org: 'Purdue University' },
+    { period: 'May 2027', title: 'B.S. Computer Science & Mathematics', org: 'Purdue University · West Lafayette, IN' },
   ],
-  pdfUrl: '/resume.pdf',
+  pdfUrl: '/Caleb-JLi-Resume.pdf',
 };

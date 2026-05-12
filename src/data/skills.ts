@@ -6,22 +6,26 @@ export interface SkillCategory {
 export const skills: SkillCategory[] = [
   {
     name: 'Languages',
-    items: ['TypeScript', 'Python', 'Rust', 'Go', 'SQL'],
+    items: ['Python', 'TypeScript', 'Java', 'C++', 'C', 'HTML/CSS', 'CUDA', 'Triton', 'LaTeX'],
   },
   {
     name: 'Frontend',
-    items: ['React', 'Preact', 'Astro', 'Tailwind CSS', 'HTML/CSS'],
+    items: ['React', 'Next.js', 'Astro', 'Tailwind CSS'],
   },
   {
     name: 'Backend',
-    items: ['Node.js', 'FastAPI', 'PostgreSQL', 'Redis', 'REST', 'GraphQL'],
+    items: ['Node.js', 'Express', 'FastAPI', 'Flask', 'MongoDB', 'Redis', 'REST', 'JWT'],
+  },
+  {
+    name: 'AI / ML',
+    items: ['PyTorch', 'TensorFlow', 'Keras', 'scikit-learn', 'LangChain/Graph', 'RAG', 'Agents', 'MCP', 'GenAI', 'Prompt Engineering'],
+  },
+  {
+    name: 'Data',
+    items: ['pandas', 'NumPy', 'Matplotlib', 'Elasticsearch'],
   },
   {
     name: 'Infrastructure',
-    items: ['Docker', 'GitHub Actions', 'AWS', 'Vercel', 'Linux'],
-  },
-  {
-    name: 'Tools',
-    items: ['Git', 'Neovim', 'tmux', 'Nix', 'Figma'],
+    items: ['Docker', 'Railway', 'Modal', 'Cloudflare', 'Celery', 'Gunicorn', 'n8n'],
   },
 ];

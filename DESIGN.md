@@ -40,4 +40,4 @@ Provide semantic buttons for every content route, visible focus, descriptive lab
 
 ## Open art direction
 
-The figures are procedural sculpts for this exploration. A later pass should refine their recognizable shapes, make lighting and contact shadows softer, and replace the illustrative landscape print with Caleb's supplied photography if desired. Mobile scene density and final object placement remain open to visual review.
+The shelf's current figures are procedural stand-ins. The [Hugging Knees likeness study](docs/concepts/smiski-study.md) tests one continuous reference-based sculpt, including facial placement, the folded pose, and material under three light settings. Review that figure before developing other poses or replacing the shelf collection. Shadow softness, the framed photograph, mobile density, and final object placement remain open to visual review.

@@ -86,22 +86,28 @@ export default function ShelfExperience() {
   }, []);
 
   useEffect(() => {
-    let cancelled = false;
-    import('./scene').then(({ createShelf }) => {
-      if (cancelled || !stage.current) return;
-      try {
-        controller.current = createShelf(stage.current, navigate, setHovered);
-        controller.current.focus(selection.current, true);
-        setStatus('ready');
-      } catch (error) {
-        console.error('Shelf rendering unavailable:', error);
-        setStatus('fallback');
-        setMenuOpen(true);
+    const initialization = new AbortController();
+    import('./scene').then(async ({ createShelf }) => {
+      if (initialization.signal.aborted || !stage.current) return;
+      const shelf = await createShelf(stage.current, navigate, setHovered, initialization.signal);
+      if (initialization.signal.aborted) {
+        shelf.dispose();
+        return;
       }
+      controller.current = shelf;
+      shelf.focus(selection.current, true);
+      setStatus('ready');
     }).catch(error => {
-      if (!cancelled) { console.error('Shelf could not load:', error); setStatus('fallback'); setMenuOpen(true); }
+      if (initialization.signal.aborted) return;
+      console.error('Shelf could not load:', error);
+      setStatus('fallback');
+      setMenuOpen(true);
     });
-    return () => { cancelled = true; controller.current?.dispose(); controller.current = null; };
+    return () => {
+      initialization.abort();
+      controller.current?.dispose();
+      controller.current = null;
+    };
   }, []);
 
   useEffect(() => {

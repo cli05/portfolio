@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
@@ -8,11 +9,37 @@ export interface ShelfController {
   setDimmed(value: boolean): void;
   dispose(): void;
 }
-type Pose = 'stand' | 'sit' | 'hug' | 'think' | 'wave' | 'lie';
+const poses = ['stand', 'sit', 'hug', 'think', 'wave', 'lie'] as const;
+type Pose = (typeof poses)[number];
+type FigureColor = 'green' | 'teal';
 type Point = [number, number, number];
 
 /** Every visible shelf object is geometry, including the figures and their poses. */
-export function createShelf(host: HTMLDivElement, select: (id: SectionId) => void, hover: (id: SectionId | null) => void): ShelfController {
+export async function createShelf(
+  host: HTMLDivElement,
+  select: (id: SectionId) => void,
+  hover: (id: SectionId | null) => void,
+  signal: AbortSignal,
+): Promise<ShelfController> {
+  const response = await fetch('/models/smiski-shelf.glb', { signal });
+  if (!response.ok) throw new Error(`Shelf figures could not load (${response.status})`);
+  const { scene: collection } = await new GLTFLoader().parseAsync(await response.arrayBuffer(), '');
+  signal.throwIfAborted();
+
+  const figures = new Map<Pose, THREE.Object3D>();
+  for (const pose of poses) {
+    const figure = collection.getObjectByName(pose);
+    if (!figure) throw new Error(`Missing shelf figure pose: ${pose}`);
+    figures.set(pose, figure);
+  }
+  const sample = figures.get('hug')?.children.find(object => object instanceof THREE.Mesh);
+  if (!(sample instanceof THREE.Mesh) || !(sample.material instanceof THREE.MeshStandardMaterial)) {
+    throw new Error('The shelf figure resin material is missing');
+  }
+  const green = sample.material;
+  const teal = green.clone();
+  teal.color.set('#76b2ad');
+
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'low-power' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.65));
   renderer.setClearColor('#625044');
@@ -43,9 +70,6 @@ export function createShelf(host: HTMLDivElement, select: (id: SectionId) => voi
   const textures = new Set<THREE.Texture>();
   const geometryCache = new Map<string, THREE.BufferGeometry>();
   const material = (color: string, roughness = .7) => new THREE.MeshStandardMaterial({ color, roughness });
-  const green = new THREE.MeshPhysicalMaterial({ color: '#b2c989', roughness: .58, clearcoat: .12, clearcoatRoughness: .7 });
-  const blue = new THREE.MeshPhysicalMaterial({ color: '#76b2ad', roughness: .57, clearcoat: .1 });
-  const eye = new THREE.MeshStandardMaterial({ color: '#293423', roughness: .85 });
   const darkGreen = material('#364e39');
   const silver = material('#a7a4a0', .36);
   const paper = material('#e5d9b8');
@@ -137,53 +161,23 @@ export function createShelf(host: HTMLDivElement, select: (id: SectionId) => voi
     m.rotation.x = -Math.PI / 2; m.castShadow = m.receiveShadow = false;
   }
 
-  function figure(parent: THREE.Object3D, x: number, pose: Pose, yaw = 0, scale = 1, mat: THREE.Material = green, z = .16) {
-    const group = new THREE.Group(); group.position.set(x, .075, z); group.rotation.y = yaw; group.scale.setScalar(scale); parent.add(group);
-    ground(group, 0, 0, pose === 'lie' ? 1.1 : .6);
-    if (pose === 'lie') {
-      ball(group, mat, [.12, .15, 0], [.34, .145, .15]);
-      const head = new THREE.Group(); head.position.set(-.33, .23, .04); head.rotation.z = -.13; group.add(head);
-      ball(head, mat, [0, 0, 0], [.23, .24, .22]);
-      for (const side of [-1, 1]) ball(head, eye, [side * .066, .006, .213], [.014, .019, .009]);
-      limb(group, mat, [-.22, .12, .07], [-.38, .065, .31], .061);
-      limb(group, mat, [.04, .14, .11], [-.18, .055, .31], .061);
-      limb(group, mat, [.32, .12, -.09], [.62, .08, -.12], .07);
-      limb(group, mat, [.32, .12, .09], [.59, .07, .15], .07);
-      return group;
-    }
-    const seated = pose === 'sit' || pose === 'hug' || pose === 'think';
-    const headY = seated ? .68 : .93;
-    ball(group, mat, [0, seated ? .31 : .49, 0], [.157, seated ? .23 : .255, .127]);
-    ball(group, mat, [0, headY - .22, 0], [.09, .12, .09]);
-    const head = new THREE.Group(); head.position.set(0, headY, .015); head.rotation.z = pose === 'think' ? -.1 : .015; group.add(head);
-    ball(head, mat, [0, 0, 0], [.232, .247, .22]);
-    for (const side of [-1, 1]) ball(head, eye, [side * .068, -.005, .213], [.014, .019, .01]);
-    for (const side of [-1, 1]) {
-      if (pose === 'hug' || pose === 'think') {
-        ball(group, mat, [side * .105, .21, .19], [.09, .15, .10]);
-        ball(group, mat, [side * .105, .06, .24], [.08, .055, .13]);
-      } else if (seated) {
-        limb(group, mat, [side * .08, .18, 0], [side * .12, .12, .27], .073);
-        limb(group, mat, [side * .12, .12, .26], [side * .12, -.23, .3], .065);
-        ball(group, mat, [side * .12, -.23, .34], [.075, .06, .105]);
-      } else {
-        limb(group, mat, [side * .085, .34, 0], [side * .105, .065, .015], .07);
-        ball(group, mat, [side * .105, .055, .06], [.084, .055, .135]);
-      }
-      const shoulder: Point = [side * .115, seated ? .43 : .62, .005];
-      if (pose === 'wave' && side === 1) {
-        limb(group, mat, shoulder, [.28, .8, .015], .055);
-        limb(group, mat, [.28, .8, .015], [.28, 1.06, .035], .055);
-      } else if (pose === 'think' && side === -1) {
-        limb(group, mat, shoulder, [-.19, .29, .19], .055);
-        limb(group, mat, [-.19, .29, .19], [-.08, .51, .23], .054);
-      } else if (pose === 'hug' || pose === 'think') {
-        limb(group, mat, shoulder, [side * .17, .31, .2], .055);
-        limb(group, mat, [side * .17, .31, .2], [side * .055, .24, .27], .05);
-      } else {
-        limb(group, mat, shoulder, [side * .23, seated ? .15 : .35, .07], .057);
-      }
-    }
+  function figure(parent: THREE.Object3D, x: number, pose: Pose, yaw = 0, scale = 1, color: FigureColor = 'green', z = .16) {
+    const group = new THREE.Group();
+    group.position.set(x, .0575, z);
+    group.rotation.y = yaw;
+    group.scale.setScalar(scale);
+    parent.add(group);
+    if (pose !== 'sit') ground(group, 0, 0, pose === 'lie' ? 1.1 : .6);
+
+    // Clones reuse the pose meshes and materials, including the original facial marks.
+    const sculpt = figures.get(pose)!.clone(true);
+    sculpt.traverse(object => {
+      if (!(object instanceof THREE.Mesh)) return;
+      if (object.material === green && color === 'teal') object.material = teal;
+      object.castShadow = object.material === green || object.material === teal;
+      object.receiveShadow = true;
+    });
+    group.add(sculpt);
     return group;
   }
 
@@ -213,8 +207,8 @@ export function createShelf(host: HTMLDivElement, select: (id: SectionId) => voi
     const group = new THREE.Group(); group.position.x = x * spread; group.userData.section = id;
     rows[row]!.add(group); layoutItems.push({ object: group, x }); sections.set(id, group); return group;
   }
-  function extra(row: number, x: number, pose: Pose, yaw = 0, scale = 1, mat: THREE.Material = green, z = .16) {
-    const group = figure(rows[row]!, x * spread, pose, yaw, scale, mat, z);
+  function extra(row: number, x: number, pose: Pose, yaw = 0, scale = 1, color: FigureColor = 'green', z = .16) {
+    const group = figure(rows[row]!, x * spread, pose, yaw, scale, color, z);
     layoutItems.push({ object: group, x }); return group;
   }
   function ladder(x: number, upper: number) {
@@ -231,7 +225,7 @@ export function createShelf(host: HTMLDivElement, select: (id: SectionId) => voi
 
   // Frame: an illustrative landscape print, never a fabricated photo of Caleb.
   const about = section('about', 0, -1.7);
-  figure(about, -.55, 'hug', .12, .88, green, .16);
+  figure(about, -.55, 'hug', .12, .88, 'green', .16);
   const frame = new THREE.Group(); frame.position.set(.3, .075, .05); frame.rotation.y = -.1; frame.rotation.x = -.07; about.add(frame);
   box(frame, wood, [.65, .81, .075], [0, .405, 0], .015);
   box(frame, paper, [.535, .69, .012], [0, .405, .046], .006);
@@ -242,7 +236,7 @@ export function createShelf(host: HTMLDivElement, select: (id: SectionId) => voi
     ctx.fillStyle = '#a1aa81'; ctx.beginPath(); ctx.moveTo(0, 143); ctx.lineTo(87, 88); ctx.lineTo(128, 120); ctx.lineTo(128, 160); ctx.lineTo(0, 160); ctx.fill();
   });
   mesh(frame, new THREE.PlaneGeometry(.46, .60), new THREE.MeshStandardMaterial({map:print, roughness:1}), [0, .405, .055]);
-  extra(0, .15, 'wave', -.12, .82); extra(0, 1.15, 'sit', -.15, .72, green, .48);
+  extra(0, .15, 'wave', -.12, .82); extra(0, 1.15, 'sit', -.15, .72, 'green', .48);
   extra(0, -3.45, 'stand', .2, .7);
 
   const projectsGroup = section('projects', 1, -.2);
@@ -263,12 +257,12 @@ export function createShelf(host: HTMLDivElement, select: (id: SectionId) => voi
   });
   mesh(screen, new THREE.PlaneGeometry(.81, .52), new THREE.MeshBasicMaterial({map:screenMap}), [0, .322, .022]);
   figure(projectsGroup, -.92, 'think', .32, .95);
-  figure(projectsGroup, 1.0, 'lie', -.12, .9, green, .20);
+  figure(projectsGroup, 1.0, 'lie', -.12, .9, 'green', .20);
   extra(1, 2.55, 'stand', -.15, .82); extra(1, 3.6, 'hug', -.25, .76);
 
   extra(2, -3.65, 'wave', .12, .82); extra(2, -2.0, 'think', .18, .83);
-  extra(2, -.48, 'sit', .08, .84, green, .48);
-  for (let i = 0; i < 3; i++) extra(2, .65 + i * .62, 'stand', -.12 + i * .1, .62, blue);
+  extra(2, -.48, 'sit', .08, .84, 'green', .48);
+  for (let i = 0; i < 3; i++) extra(2, .65 + i * .62, 'stand', -.12 + i * .1, .62, 'teal');
   extra(2, 2.65, 'hug', -.18, .74);
 
   const interests = section('interests', 3, -.2);
@@ -287,8 +281,8 @@ export function createShelf(host: HTMLDivElement, select: (id: SectionId) => voi
     for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) box(faceGroup, stickerMats[(face + r + (c === 1 ? 2 : 0)) % 6]!, [.174, .174, .008], [(c - 1) * .197, (r - 1) * .197, .307], .009);
   }
   figure(interests, -.92, 'stand', .24, .86);
-  figure(interests, .65, 'sit', -.1, .72, green, .5);
-  const tennis = new THREE.Group(); tennis.position.set(1.65, .35, .13); tennis.rotation.z = .4; interests.add(tennis);
+  figure(interests, .65, 'sit', -.1, .72, 'green', .5);
+  const tennis = new THREE.Group(); tennis.position.set(small ? 1.17 : 1.65, .35, .13); tennis.rotation.z = .4; interests.add(tennis);
   const tennisMat = material('#b2ba45', .95); ball(tennis, tennisMat, [0, 0, 0], [.285, .285, .285]);
   const seamPoints: Point[] = [];
   for (let i = 0; i <= 100; i++) {
@@ -298,7 +292,7 @@ export function createShelf(host: HTMLDivElement, select: (id: SectionId) => voi
   }
   line(tennis, seamPoints, paper, .009);
   figure(interests, 2.3, 'hug', -.28, .86);
-  extra(3, -3.1, 'sit', .1, .88, green, .48);
+  extra(3, -3.1, 'sit', .1, .88, 'green', .48);
   const interestExtra = extra(3, 3.1, 'wave', -.16, .72);
   interestExtra.visible = !small;
 
@@ -309,8 +303,8 @@ export function createShelf(host: HTMLDivElement, select: (id: SectionId) => voi
   line(envelope, [[-.35, .44, .032], [0, .20, .037], [.35, .44, .032]], envelopeLine, .005);
   line(envelope, [[-.35, .025, .032], [-.13, .20, .033]], envelopeLine, .004);
   line(envelope, [[.35, .025, .032], [.13, .20, .033]], envelopeLine, .004);
-  figure(contact, .18, 'hug', .1, .8, green, -.05);
-  extra(4, -.6, 'sit', .15, .92, green, .48); extra(4, 3.25, 'lie', -.14, .8);
+  figure(contact, .18, 'hug', .1, .8, 'green', -.05);
+  extra(4, -.6, 'sit', .15, .92, 'green', .48); extra(4, 3.25, 'lie', -.14, .8);
   for (let i = 0; i < 2; i++) extra(4, -1.55 + i * .5, 'stand', -.1, .48);
 
   const ids: SectionId[] = ['about', 'projects', 'interests', 'contact'];
@@ -360,6 +354,7 @@ export function createShelf(host: HTMLDivElement, select: (id: SectionId) => voi
         ladder.scale.y = vertical / initialVertical;
       });
       interestExtra.visible = !small;
+      tennis.position.x = small ? 1.17 : 1.65;
       renderer.shadowMap.needsUpdate = true;
     }
     renderer.setSize(host.clientWidth, host.clientHeight);
@@ -439,7 +434,7 @@ export function createShelf(host: HTMLDivElement, select: (id: SectionId) => voi
     setDimmed(value) {
       keyLight.intensity = value ? 75 : 275; ambient.intensity = value ? .40 : 1.1; fill.intensity = value ? .26 : 1.05;
       green.emissive.set(value ? '#6c8c37' : '#000000'); green.emissiveIntensity = value ? .35 : 0;
-      blue.emissive.set(value ? '#39776a' : '#000000'); blue.emissiveIntensity = value ? .24 : 0;
+      teal.emissive.set(value ? '#39776a' : '#000000'); teal.emissiveIntensity = value ? .24 : 0;
       renderer.shadowMap.needsUpdate = true; dirty = true;
     },
     dispose() {

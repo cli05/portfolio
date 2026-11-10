@@ -12,4 +12,6 @@ Use Front, Three-quarter, Side, and Back to check the silhouette. Drag to orbit,
 - [Offline sculpt generator](../../scripts/sculpt-smiski.mjs). Run `node scripts/sculpt-smiski.mjs` from the repository root to rebuild the GLB and its [topology report](smiski-hugging-knees-study.json).
 - The generator blends a shaped torso, curved limbs, and tapered head into a single implicit surface, extracts the mesh, welds vertices, and checks body connectivity and edge topology before export.
 
-This is a high-detail review asset, not a rigged or optimized model for the full shelf. Confirm the likeness and material before deriving additional poses and preparing lower-detail shelf versions. The current homepage and shelf collection do not use this asset yet.
+The shelf loads one [GLB containing six lower-detail poses](../../public/models/smiski-shelf.glb) based on the approved likeness. Each pose has a continuous body and a single mesh for the painted facial marks. Figures on the shelf share geometry and use two resin colors.
+
+Run `node scripts/sculpt-smiski.mjs --shelf` to rebuild the shelf asset and its [mesh report](smiski-shelf-meshes.json). The close-up viewer uses the detailed Hugging Knees export.

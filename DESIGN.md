@@ -40,4 +40,4 @@ Provide semantic buttons for every content route, visible focus, descriptive lab
 
 ## Open art direction
 
-The shelf's current figures are procedural stand-ins. The [Hugging Knees likeness study](docs/concepts/smiski-study.md) tests one continuous reference-based sculpt, including facial placement, the folded pose, and material under three light settings. Review that figure before developing other poses or replacing the shelf collection. Shadow softness, the framed photograph, mobile density, and final object placement remain open to visual review.
+The [Hugging Knees likeness study](docs/concepts/smiski-study.md) established the shared head, facial features, and pale resin color for all six poses. The shelf uses lighter meshes for standing, sitting, hugging knees, thinking, waving, and lounging. The teal trio uses the standing sculpt with a tinted material. Shadow softness, the framed photograph, and final object placement remain open to visual review.

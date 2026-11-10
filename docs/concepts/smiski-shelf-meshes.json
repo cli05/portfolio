@@ -1,0 +1,127 @@
+{
+  "asset": "smiski-shelf.glb",
+  "bytes": 1279108,
+  "poses": {
+    "stand": {
+      "resolution": 70,
+      "vertices": 4546,
+      "triangles": 9088,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.38117602467536926,
+          0.0061919474974274635,
+          -0.38221433758735657
+        ],
+        "max": [
+          0.3471027910709381,
+          1.978765606880188,
+          0.3024537265300751
+        ]
+      }
+    },
+    "sit": {
+      "resolution": 70,
+      "vertices": 5428,
+      "triangles": 10860,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.4093737006187439,
+          -0.45427650213241577,
+          -0.3673069477081299
+        ],
+        "max": [
+          0.4093737006187439,
+          1.43064284324646,
+          0.5510392189025879
+        ]
+      }
+    },
+    "hug": {
+      "resolution": 70,
+      "vertices": 6898,
+      "triangles": 13804,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.38944220542907715,
+          0.006007164251059294,
+          -0.39788272976875305
+        ],
+        "max": [
+          0.3744867444038391,
+          1.6642016172409058,
+          0.7627371549606323
+        ]
+      }
+    },
+    "think": {
+      "resolution": 70,
+      "vertices": 6940,
+      "triangles": 13892,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.42940187454223633,
+          0.006007164251059294,
+          -0.3035393953323364
+        ],
+        "max": [
+          0.3744867444038391,
+          1.6334706544876099,
+          0.7627371549606323
+        ]
+      }
+    },
+    "wave": {
+      "resolution": 70,
+      "vertices": 4800,
+      "triangles": 9596,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.33795854449272156,
+          0.0061919474974274635,
+          -0.3823579251766205
+        ],
+        "max": [
+          0.6424014568328857,
+          1.9790452718734741,
+          0.302444726228714
+        ]
+      }
+    },
+    "lie": {
+      "resolution": 70,
+      "vertices": 4318,
+      "triangles": 8632,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.8508094549179077,
+          0.006000003777444363,
+          -0.3117873966693878
+        ],
+        "max": [
+          0.9705630540847778,
+          0.7427929043769836,
+          0.42491593956947327
+        ]
+      }
+    }
+  },
+  "reference": "https://smiski.com/e/products/series-1/"
+}

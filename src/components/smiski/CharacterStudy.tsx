@@ -52,7 +52,7 @@ export default function CharacterStudy() {
           <li><span>03</span><div><h2>The pose</h2><p>Raised knees, wrapped forearms, and softly tapered shins and feet.</p></div></li>
         </ol></div>
         <div class="study-lighting"><p class="study-kicker">Check the material</p><div role="group" aria-label="Lighting">{lights.map(l => <button key={l.id} type="button" disabled={status !== 'ready'} aria-pressed={light === l.id} onClick={() => {setLight(l.id);controller.current?.setLight(l.id);}}>{l.label}</button>)}</div></div>
-        <p class="study-status-note">A first likeness pass for review. The shelf's other figures stay as they are until this one feels right.</p>
+        <p class="study-status-note">This sculpt established the face, proportions, and resin color for the shelf collection.</p>
         <a class="study-download" href="/models/smiski-hugging-knees-study.glb" download>Download the 3D model <span aria-hidden="true">↓</span></a>
       </aside>
     </div>

@@ -24,7 +24,6 @@ The scene caps pixel density, reuses geometry and materials, reuses static shado
 
 ## Still exploratory
 
-- Review the [Hugging Knees likeness study](smiski-study.md) before replacing the current stand-ins with refined figures.
 - Improve shadow softness, final camera limits, and mobile density after visual review.
 - Existing project data is reused. Screenshots, deeper case studies, current role dates, and detailed interests remain future content work.
 - The app build and TypeScript checks validate the prototype; existing dependency audit findings are outside this design exploration.

@@ -189,8 +189,9 @@ function createFace(pose, detailed) {
   face.position.set(...pose.head);
   face.rotation.set(...pose.tilt);
   const faceZ = (x, y) => .343 * Math.sqrt(Math.max(0, 1 - (x / jawWidth(y)) ** 2 - (y / .385) ** 2));
+  const { eyeY = -.118, mouthY = -.265 } = pose.face ?? {};
   for (const side of [-1, 1]) {
-    const x = side * .114, y = -.118, z = faceZ(x, y);
+    const x = side * .114, y = eyeY, z = faceZ(x, y);
     const eye = new THREE.Mesh(new THREE.SphereGeometry(1, detailed ? 20 : 12, detailed ? 12 : 8), faceInk);
     eye.name = side < 0 ? 'Left printed eye' : 'Right printed eye';
     eye.position.set(x, y, z + .001);
@@ -201,7 +202,7 @@ function createFace(pose, detailed) {
   const mouthPoints = [];
   for (let i = 0; i <= 12; i++) {
     const x = (i / 12 - .5) * .114;
-    const y = -.265 - .008 * (x / .057) ** 2;
+    const y = mouthY - .008 * (x / .057) ** 2;
     mouthPoints.push(new THREE.Vector3(x, y, faceZ(x, y) + .0015));
   }
   const mouth = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(mouthPoints), detailed ? 16 : 12, .0062, 6, false), faceInk);

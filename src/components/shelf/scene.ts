@@ -10,7 +10,7 @@ export interface ShelfController {
   dispose(): void;
 }
 const poses = ['stand', 'sit', 'hug', 'think', 'wave', 'lie'] as const;
-type Pose = (typeof poses)[number];
+type Pose = (typeof poses)[number] | 'sit-series-1';
 type FigureColor = 'green' | 'teal';
 type Point = [number, number, number];
 
@@ -21,9 +21,16 @@ export async function createShelf(
   hover: (id: SectionId | null) => void,
   signal: AbortSignal,
 ): Promise<ShelfController> {
-  const response = await fetch('/models/smiski-shelf.glb', { signal });
-  if (!response.ok) throw new Error(`Shelf figures could not load (${response.status})`);
-  const { scene: collection } = await new GLTFLoader().parseAsync(await response.arrayBuffer(), '');
+  const loader = new GLTFLoader();
+  async function loadFigures(filename: string) {
+    const response = await fetch(`/models/${filename}`, { signal });
+    if (!response.ok) throw new Error(`Shelf figure model ${filename} could not load (${response.status})`);
+    return (await loader.parseAsync(await response.arrayBuffer(), '')).scene;
+  }
+  const [collection, sittingStudy] = await Promise.all([
+    loadFigures('smiski-shelf.glb'),
+    loadFigures('smiski-series-1-sitting.glb'),
+  ]);
   signal.throwIfAborted();
 
   const figures = new Map<Pose, THREE.Object3D>();
@@ -37,6 +44,10 @@ export async function createShelf(
     throw new Error('The shelf figure resin material is missing');
   }
   const green = sample.material;
+  sittingStudy.traverse(object => {
+    if (object instanceof THREE.Mesh && object.material.name === green.name) object.material = green;
+  });
+  figures.set('sit-series-1', sittingStudy);
   const teal = green.clone();
   teal.color.set('#76b2ad');
 
@@ -167,7 +178,7 @@ export async function createShelf(
     group.rotation.y = yaw;
     group.scale.setScalar(scale);
     parent.add(group);
-    if (pose !== 'sit') ground(group, 0, 0, pose === 'lie' ? 1.1 : .6);
+    if (pose !== 'sit' && pose !== 'sit-series-1') ground(group, 0, 0, pose === 'lie' ? 1.1 : .6);
 
     // Clones reuse the pose meshes and materials, including the original facial marks.
     const sculpt = figures.get(pose)!.clone(true);
@@ -190,10 +201,13 @@ export async function createShelf(
   const rowYs = [2.55, 1.25, -.05, -1.35, -2.65];
   const widths = [7.55, 7.8, 8.0, 7.45, 7.0];
   const offsets = [-.65, .6, -.75, -.15, .85];
+  const plankDepth = .98;
+  const plankCenterZ = .06;
+  const shelfFront = plankCenterZ + plankDepth / 2;
   const rows = rowYs.map((y, i) => {
     const row = new THREE.Group(); row.position.y = y * vertical; scene.add(row);
     layoutItems.push({ object: row, x: 0, y });
-    const plank = box(row, wood, [widths[i]!, .115, .98], [offsets[i]! * spread, 0, .06], .023);
+    const plank = box(row, wood, [widths[i]!, .115, plankDepth], [offsets[i]! * spread, 0, plankCenterZ], .023);
     plank.scale.x = spread;
     layoutItems.push({ object: plank, x: offsets[i]!, width: true });
     for (const x of [offsets[i]! - widths[i]! * .36, offsets[i]! + widths[i]! * .36]) {
@@ -261,7 +275,7 @@ export async function createShelf(
   extra(1, 2.55, 'stand', -.15, .82); extra(1, 3.6, 'hug', -.25, .76);
 
   extra(2, -3.65, 'wave', .12, .82); extra(2, -2.0, 'think', .18, .83);
-  extra(2, -.48, 'sit', .08, .84, 'green', .48);
+  extra(2, -.48, 'sit-series-1', 0, .84, 'green', shelfFront);
   for (let i = 0; i < 3; i++) extra(2, .65 + i * .62, 'stand', -.12 + i * .1, .62, 'teal');
   extra(2, 2.65, 'hug', -.18, .74);
 

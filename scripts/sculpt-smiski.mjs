@@ -228,6 +228,12 @@ function createModel(name, buildPose, resolution, skin, detailed) {
   const body = new THREE.Mesh(geometry, skin);
   body.name = 'Continuous sculpt';
   model.add(body, createFace(pose, detailed));
+  if (pose.laptopMount) {
+    const mount = new THREE.Object3D();
+    mount.name = 'LaptopMount';
+    mount.position.set(...pose.laptopMount);
+    model.add(mount);
+  }
   return { model, report };
 }
 
@@ -264,7 +270,8 @@ if (shelf) {
   const asset = 'smiski-shelf.glb';
   await writeFile(new URL(asset, output), Buffer.from(binary));
   const climbingReference = 'https://smiski.com/e/products/series-2/';
-  await writeFile(new URL('smiski-shelf-meshes.json', reports), JSON.stringify({ asset, bytes: binary.byteLength, poses, reference, climbingReference }, null, 2) + '\n');
+  const researchingReference = 'https://smiski.com/e/products/work-series/';
+  await writeFile(new URL('smiski-shelf-meshes.json', reports), JSON.stringify({ asset, bytes: binary.byteLength, poses, reference, climbingReference, researchingReference }, null, 2) + '\n');
   console.log(`${asset}: ${binary.byteLength} bytes`);
 } else {
   const skin = new THREE.MeshPhysicalMaterial({

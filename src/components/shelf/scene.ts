@@ -9,7 +9,7 @@ export interface ShelfController {
   setDimmed(value: boolean): void;
   dispose(): void;
 }
-const poses = ['stand', 'climb', 'hug', 'think', 'wave', 'lie'] as const;
+const poses = ['stand', 'climb', 'research', 'hug', 'think', 'wave', 'lie'] as const;
 const plankTop = .0575;
 type Pose = (typeof poses)[number] | 'sit';
 type FigureColor = 'green' | 'teal';
@@ -83,7 +83,6 @@ export async function createShelf(
   const geometryCache = new Map<string, THREE.BufferGeometry>();
   const material = (color: string, roughness = .7) => new THREE.MeshStandardMaterial({ color, roughness });
   const darkGreen = material('#364e39');
-  const silver = material('#a7a4a0', .36);
   const paper = material('#e5d9b8');
   const rubber = material('#222624');
   const sphere = new THREE.SphereGeometry(1, 28, 20);
@@ -179,7 +178,7 @@ export async function createShelf(
     group.rotation.y = yaw;
     group.scale.setScalar(scale);
     parent.add(group);
-    if (pose !== 'sit' && pose !== 'climb') ground(group, 0, 0, pose === 'lie' ? 1.1 : .6);
+    if (pose !== 'sit' && pose !== 'climb' && pose !== 'research') ground(group, 0, 0, pose === 'lie' ? 1.1 : .6);
 
     // Clones reuse the pose meshes and materials, including the original facial marks.
     const sculpt = figures.get(pose)!.clone(true);
@@ -257,13 +256,19 @@ export async function createShelf(
   extra(0, -3.45, 'stand', .2, .7);
 
   const projectsGroup = section('projects', 1, -.2);
-  const laptop = new THREE.Group(); laptop.rotation.y = -.12; laptop.position.set(0, .075, .17); projectsGroup.add(laptop);
-  box(laptop, silver, [.91, .035, .61], [0, .023, 0], .012);
-  box(laptop, rubber, [.72, .007, .25], [0, .045, -.09], .009);
-  for (let r = 0; r < 3; r++) for (let c = 0; c < 9; c++) box(laptop, silver, [.059, .007, .054], [-.31 + c * .078, .051, -.18 + r * .075], .006);
-  box(laptop, silver, [.24, .003, .13], [0, .045, .17], .01);
-  const screen = new THREE.Group(); screen.position.set(0, .047, -.27); screen.rotation.x = -.14; laptop.add(screen);
-  box(screen, silver, [.91, .63, .038], [0, .315, 0], .018);
+  const researcher = figure(projectsGroup, 0, 'research', -.28, .96, 'green', shelfFront);
+  const laptop = researcher.getObjectByName('LaptopMount');
+  if (!laptop) throw new Error('The Researching figure is missing its laptop mount');
+  const laptopCase = material('#91a766', .51);
+  box(laptop, laptopCase, [.74, .036, .47], [0, .018, 0], .013);
+  box(laptop, darkGreen, [.62, .007, .19], [0, .038, .070], .008);
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 9; c++) {
+    box(laptop, laptopCase, [.056, .007, .04], [-.269 + c * .067, .044, .008 + r * .059], .005);
+  }
+  box(laptop, darkGreen, [.20, .003, .102], [0, .037, -.126], .009);
+  const screen = new THREE.Group(); screen.position.set(0, .034, .214); screen.rotation.x = .31; laptop.add(screen);
+  const lidHeight = .37;
+  box(screen, laptopCase, [.74, lidHeight, .033], [0, lidHeight / 2, 0], .014);
   const screenMap = canvasTexture(256, 160, ctx => {
     ctx.fillStyle = '#202d27'; ctx.fillRect(0, 0, 256, 160);
     ctx.fillStyle = '#3c5145'; ctx.fillRect(0, 0, 256, 15);
@@ -272,7 +277,17 @@ export async function createShelf(
       ctx.fillRect(15 + (r % 3) * 12, 30 + r * 12, 40 + (r * 17) % 120, 4);
     }
   });
-  mesh(screen, new THREE.PlaneGeometry(.81, .52), new THREE.MeshBasicMaterial({map:screenMap}), [0, .322, .022]);
+  const display = mesh(screen, new THREE.PlaneGeometry(.66, lidHeight - .075), new THREE.MeshBasicMaterial({map:screenMap}), [0, lidHeight / 2, -.017]);
+  display.rotation.y = Math.PI;
+  display.castShadow = false;
+  const lidMark = canvasTexture(64, 64, ctx => {
+    ctx.fillStyle = '#e5e8b9'; ctx.beginPath(); ctx.arc(32, 32, 29, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#68794d';
+    for (const x of [24, 40]) { ctx.beginPath(); ctx.arc(x, 31, 2.2, 0, Math.PI * 2); ctx.fill(); }
+    ctx.fillRect(29, 42, 6, 2);
+  });
+  const badge = mesh(screen, new THREE.PlaneGeometry(.111, .111), new THREE.MeshStandardMaterial({ map: lidMark, transparent: true, roughness: .67 }), [0, lidHeight / 2, .017]);
+  badge.castShadow = false;
   figure(projectsGroup, -.92, 'think', .32, .95);
   figure(projectsGroup, 1.0, 'lie', -.12, .9, 'green', .20);
   extra(1, 2.55, 'stand', -.15, .82); extra(1, 3.6, 'hug', -.25, .76);
@@ -422,7 +437,13 @@ export async function createShelf(
   function positionHotspots() {
     const projected = new THREE.Vector3();
     ids.forEach((id, i) => {
-      sections.get(id)!.getWorldPosition(projected); projected.y += .47; projected.z += .65; projected.project(camera);
+      if (id === 'projects') badge.getWorldPosition(projected);
+      else {
+        sections.get(id)!.getWorldPosition(projected);
+        projected.y += .47;
+        projected.z += .65;
+      }
+      projected.project(camera);
       const button = hotspotElements[i];
       if (!button) return;
       button.style.left = `${(projected.x + 1) / 2 * host.clientWidth}px`;

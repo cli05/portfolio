@@ -1,6 +1,6 @@
 {
   "asset": "smiski-shelf.glb",
-  "bytes": 1338604,
+  "bytes": 1618416,
   "poses": {
     "stand": {
       "resolution": 70,
@@ -39,6 +39,26 @@
           0.5227518081665039,
           0.9059850573539734,
           0.4233405292034149
+        ]
+      }
+    },
+    "research": {
+      "resolution": 70,
+      "vertices": 7340,
+      "triangles": 14676,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.36437806487083435,
+          -0.3643031120300293,
+          -0.4915733337402344
+        ],
+        "max": [
+          0.3644857108592987,
+          1.368059754371643,
+          0.3610609173774719
         ]
       }
     },
@@ -124,5 +144,6 @@
     }
   },
   "reference": "https://smiski.com/e/products/series-1/",
-  "climbingReference": "https://smiski.com/e/products/series-2/"
+  "climbingReference": "https://smiski.com/e/products/series-2/",
+  "researchingReference": "https://smiski.com/e/products/work-series/"
 }

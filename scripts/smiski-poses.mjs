@@ -73,6 +73,31 @@ function climbing(ellipsoid, stroke) {
   };
 }
 
+function researching(ellipsoid, stroke) {
+  // The shelf lip is at z = 0. The hips sit behind it and the knees bend over it.
+  ellipsoid([0, .138, -.225], [.202, .145, .154], .058);
+  ellipsoid([0, .336, -.223], [.181, .22, .152], .068);
+  ellipsoid([0, .531, -.205], [.161, .175, .138], .06);
+  ellipsoid([0, .703, -.176], [.087, .115, .085], .05);
+  for (const side of [-1, 1]) {
+    const x = side * .125;
+    stroke([[side * .102, .147, -.178], [x, .147, -.064], [x, .095, .059], [x, -.102, .141], [x, -.257, .202]],
+      [.112, .111, .102, .087, .075], .035);
+    ellipsoid([x, -.279, .251], [.096, .087, .113], .033);
+
+    const handZ = side < 0 ? .207 : .177;
+    stroke([[side * .126, .561, -.193], [side * .223, .423, -.100], [side * .209, .357, .034], [side * .151, .347, handZ]],
+      [.089, .078, .071, .064], .027);
+  }
+
+  return {
+    head: [0, .985, -.147], tilt: [.19, -.04, .018],
+    face: { eyeY: -.084, mouthY: -.233 },
+    center: [0, .49, -.035], half: .94, shelfEdge: true,
+    laptopMount: [0, .23, .248],
+  };
+}
+
 function lounging(ellipsoid, stroke) {
   ellipsoid([.019, .174, -.009], [.369, .176, .195], .075);
   ellipsoid([.319, .148, -.035], [.243, .15, .182], .068);
@@ -89,6 +114,7 @@ function lounging(ellipsoid, stroke) {
 export const shelfPoses = {
   stand: standing,
   climb: climbing,
+  research: researching,
   hug: huggingKnees,
   think: (ellipsoid, stroke) => huggingKnees(ellipsoid, stroke, true),
   wave: (ellipsoid, stroke) => standing(ellipsoid, stroke, true),

@@ -48,18 +48,24 @@ function standing(ellipsoid, stroke, waving = false) {
   };
 }
 
-function sitting(ellipsoid, stroke) {
-  ellipsoid([0, .132, -.023], [.216, .145, .184], .072);
-  ellipsoid([0, .352, -.024], [.192, .242, .157], .079);
-  ellipsoid([0, .572, -.046], [.169, .196, .139], .064);
-  ellipsoid([0, .757, -.04], [.085, .122, .084], .065);
-  for (const side of [-1, 1]) {
-    const x = side * .13;
-    stroke([[side * .109, .131, .011], [x, .134, .236], [x, .035, .359], [x, -.334, .403]], [.104, .098, .089, .072], .045);
-    ellipsoid([x, -.363, .443], [.087, .093, .111], .036);
-    stroke([[side * .123, .609, -.039], [side * .245, .414, .034], [side * .336, .127, .13]], [.085, .072, .075]);
-  }
-  return {head:[-.025, 1.047, -.024], tilt:[.134, .014, .052], center:[0, .52, .12], half:1.12};
+function climbing(ellipsoid, stroke) {
+  // The origin is the top front edge of the plank. Positive z is out from the shelf.
+  ellipsoid([-.245, -.112, .234], [.228, .199, .163], .065);
+  ellipsoid([-.101, .036, .172], [.219, .181, .155], .069);
+  ellipsoid([.064, .152, .108], [.204, .149, .146], .061);
+  ellipsoid([.169, .278, .102], [.105, .131, .102], .065);
+
+  stroke([[-.047, .168, .127], [.070, .097, .239], [.146, .092, .144], [.110, .086, -.036], [-.017, .081, -.153]],
+    [.103, .102, .096, .088, .088], .038);
+  stroke([[.195, .167, .131], [.325, .103, -.003], [.278, .095, -.156], [.092, .083, -.212]],
+    [.103, .107, .088, .088], .038);
+
+  stroke([[-.304, -.158, .209], [-.458, -.269, .24], [-.542, -.331, .221]], [.112, .104, .085], .043);
+  ellipsoid([-.577, -.336, .192], [.127, .089, .086], .035);
+  stroke([[-.182, -.187, .259], [-.179, -.344, .306], [-.104, -.537, .179]], [.107, .091, .075], .038);
+  ellipsoid([-.066, -.569, .079], [.091, .081, .119], .036);
+
+  return {head:[.211, .486, .134], tilt:[.04, -.08, -.172], center:[-.044, .146, .075], half:.95, shelfEdge:true};
 }
 
 function lounging(ellipsoid, stroke) {
@@ -77,7 +83,7 @@ function lounging(ellipsoid, stroke) {
 
 export const shelfPoses = {
   stand: standing,
-  sit: sitting,
+  climb: climbing,
   hug: huggingKnees,
   think: (ellipsoid, stroke) => huggingKnees(ellipsoid, stroke, true),
   wave: (ellipsoid, stroke) => standing(ellipsoid, stroke, true),

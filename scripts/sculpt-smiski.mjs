@@ -77,6 +77,8 @@ function sculptGeometry(buildPose, resolution, skin) {
     const localZ = inverse[2] * dx + inverse[6] * dy + inverse[10] * dz;
     const head = ellipsoidDistance(localX, localY, localZ, headOrigin, [jawWidth(localY), .385, .343]);
     result = smoothUnion(result, head, .05);
+    // Trim the portion below the plank top and behind its front lip.
+    if (pose.shelfEdge) result = Math.max(result, Math.min(-y, -z));
     return pose.floor === undefined ? result : Math.max(result, pose.floor - y);
   }
 
@@ -260,7 +262,8 @@ if (shelf) {
   const binary = await exporter.parseAsync(collection, { binary: true });
   const asset = 'smiski-shelf.glb';
   await writeFile(new URL(asset, output), Buffer.from(binary));
-  await writeFile(new URL('smiski-shelf-meshes.json', reports), JSON.stringify({ asset, bytes: binary.byteLength, poses, reference }, null, 2) + '\n');
+  const climbingReference = 'https://smiski.com/e/products/series-2/';
+  await writeFile(new URL('smiski-shelf-meshes.json', reports), JSON.stringify({ asset, bytes: binary.byteLength, poses, reference, climbingReference }, null, 2) + '\n');
   console.log(`${asset}: ${binary.byteLength} bytes`);
 } else {
   const skin = new THREE.MeshPhysicalMaterial({

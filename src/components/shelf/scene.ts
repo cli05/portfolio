@@ -9,8 +9,9 @@ export interface ShelfController {
   setDimmed(value: boolean): void;
   dispose(): void;
 }
-const poses = ['stand', 'sit', 'hug', 'think', 'wave', 'lie'] as const;
-type Pose = (typeof poses)[number] | 'sit-series-1';
+const poses = ['stand', 'climb', 'hug', 'think', 'wave', 'lie'] as const;
+const plankTop = .0575;
+type Pose = (typeof poses)[number] | 'sit';
 type FigureColor = 'green' | 'teal';
 type Point = [number, number, number];
 
@@ -47,7 +48,7 @@ export async function createShelf(
   sittingStudy.traverse(object => {
     if (object instanceof THREE.Mesh && object.material.name === green.name) object.material = green;
   });
-  figures.set('sit-series-1', sittingStudy);
+  figures.set('sit', sittingStudy);
   const teal = green.clone();
   teal.color.set('#76b2ad');
 
@@ -174,11 +175,11 @@ export async function createShelf(
 
   function figure(parent: THREE.Object3D, x: number, pose: Pose, yaw = 0, scale = 1, color: FigureColor = 'green', z = .16) {
     const group = new THREE.Group();
-    group.position.set(x, .0575, z);
+    group.position.set(x, plankTop, z);
     group.rotation.y = yaw;
     group.scale.setScalar(scale);
     parent.add(group);
-    if (pose !== 'sit' && pose !== 'sit-series-1') ground(group, 0, 0, pose === 'lie' ? 1.1 : .6);
+    if (pose !== 'sit' && pose !== 'climb') ground(group, 0, 0, pose === 'lie' ? 1.1 : .6);
 
     // Clones reuse the pose meshes and materials, including the original facial marks.
     const sculpt = figures.get(pose)!.clone(true);
@@ -207,7 +208,7 @@ export async function createShelf(
   const rows = rowYs.map((y, i) => {
     const row = new THREE.Group(); row.position.y = y * vertical; scene.add(row);
     layoutItems.push({ object: row, x: 0, y });
-    const plank = box(row, wood, [widths[i]!, .115, plankDepth], [offsets[i]! * spread, 0, plankCenterZ], .023);
+    const plank = box(row, wood, [widths[i]!, 2 * plankTop, plankDepth], [offsets[i]! * spread, 0, plankCenterZ], .023);
     plank.scale.x = spread;
     layoutItems.push({ object: plank, x: offsets[i]!, width: true });
     for (const x of [offsets[i]! - widths[i]! * .36, offsets[i]! + widths[i]! * .36]) {
@@ -225,17 +226,19 @@ export async function createShelf(
     const group = figure(rows[row]!, x * spread, pose, yaw, scale, color, z);
     layoutItems.push({ object: group, x }); return group;
   }
-  function ladder(x: number, upper: number) {
+  function ladder(x: number, upper: number, railOverhang = .0725) {
     const bottom = rows[upper + 1]!.position.y + .06;
-    const top = rows[upper]!.position.y + .13;
-    const group = new THREE.Group(); group.position.set(x * spread, bottom, .55); scene.add(group);
+    const top = rows[upper]!.position.y + plankTop + railOverhang;
+    const group = new THREE.Group(); group.position.set(x * spread, bottom, shelfFront); scene.add(group);
     layoutItems.push({object:group, x});
     const height = top - bottom;
     for (const side of [-1, 1]) limb(group, darkGreen, [side * .16, 0, 0], [side * .16, height, 0], .022);
     for (let y = .13; y < height; y += .16) limb(group, darkGreen, [-.16, y, 0], [.16, y, 0], .014);
     return group;
   }
-  const ladders = [ladder(2.45, 0), ladder(-2.85, 1), ladder(2.35, 2), ladder(-1.8, 3)];
+  const climbingLadderX = -2.85;
+  const ladders = [ladder(2.45, 0), ladder(climbingLadderX, 1, 0), ladder(2.35, 2), ladder(-1.8, 3)];
+  extra(1, climbingLadderX, 'climb', 0, .92, 'green', shelfFront);
 
   // Frame: an illustrative landscape print, never a fabricated photo of Caleb.
   const about = section('about', 0, -1.7);
@@ -250,7 +253,7 @@ export async function createShelf(
     ctx.fillStyle = '#a1aa81'; ctx.beginPath(); ctx.moveTo(0, 143); ctx.lineTo(87, 88); ctx.lineTo(128, 120); ctx.lineTo(128, 160); ctx.lineTo(0, 160); ctx.fill();
   });
   mesh(frame, new THREE.PlaneGeometry(.46, .60), new THREE.MeshStandardMaterial({map:print, roughness:1}), [0, .405, .055]);
-  extra(0, .15, 'wave', -.12, .82); extra(0, 1.15, 'sit', -.15, .72, 'green', .48);
+  extra(0, .15, 'wave', -.12, .82); extra(0, 1.15, 'sit', 0, .72, 'green', shelfFront);
   extra(0, -3.45, 'stand', .2, .7);
 
   const projectsGroup = section('projects', 1, -.2);
@@ -275,7 +278,7 @@ export async function createShelf(
   extra(1, 2.55, 'stand', -.15, .82); extra(1, 3.6, 'hug', -.25, .76);
 
   extra(2, -3.65, 'wave', .12, .82); extra(2, -2.0, 'think', .18, .83);
-  extra(2, -.48, 'sit-series-1', 0, .84, 'green', shelfFront);
+  extra(2, -.48, 'sit', 0, .84, 'green', shelfFront);
   for (let i = 0; i < 3; i++) extra(2, .65 + i * .62, 'stand', -.12 + i * .1, .62, 'teal');
   extra(2, 2.65, 'hug', -.18, .74);
 
@@ -295,7 +298,7 @@ export async function createShelf(
     for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) box(faceGroup, stickerMats[(face + r + (c === 1 ? 2 : 0)) % 6]!, [.174, .174, .008], [(c - 1) * .197, (r - 1) * .197, .307], .009);
   }
   figure(interests, -.92, 'stand', .24, .86);
-  figure(interests, .65, 'sit', -.1, .72, 'green', .5);
+  figure(interests, .65, 'sit', 0, .72, 'green', shelfFront);
   const tennis = new THREE.Group(); tennis.position.set(small ? 1.17 : 1.65, .35, .13); tennis.rotation.z = .4; interests.add(tennis);
   const tennisMat = material('#b2ba45', .95); ball(tennis, tennisMat, [0, 0, 0], [.285, .285, .285]);
   const seamPoints: Point[] = [];
@@ -306,7 +309,7 @@ export async function createShelf(
   }
   line(tennis, seamPoints, paper, .009);
   figure(interests, 2.3, 'hug', -.28, .86);
-  extra(3, -3.1, 'sit', .1, .88, 'green', .48);
+  extra(3, -3.1, 'sit', 0, .88, 'green', shelfFront);
   const interestExtra = extra(3, 3.1, 'wave', -.16, .72);
   interestExtra.visible = !small;
 
@@ -318,7 +321,7 @@ export async function createShelf(
   line(envelope, [[-.35, .025, .032], [-.13, .20, .033]], envelopeLine, .004);
   line(envelope, [[.35, .025, .032], [.13, .20, .033]], envelopeLine, .004);
   figure(contact, .18, 'hug', .1, .8, 'green', -.05);
-  extra(4, -.6, 'sit', .15, .92, 'green', .48); extra(4, 3.25, 'lie', -.14, .8);
+  extra(4, -.6, 'sit', 0, .92, 'green', shelfFront); extra(4, 3.25, 'lie', -.14, .8);
   for (let i = 0; i < 2; i++) extra(4, -1.55 + i * .5, 'stand', -.1, .48);
 
   const ids: SectionId[] = ['about', 'projects', 'interests', 'contact'];

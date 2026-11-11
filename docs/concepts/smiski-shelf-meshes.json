@@ -1,6 +1,6 @@
 {
   "asset": "smiski-shelf.glb",
-  "bytes": 1279108,
+  "bytes": 1307912,
   "poses": {
     "stand": {
       "resolution": 70,
@@ -22,23 +22,23 @@
         ]
       }
     },
-    "sit": {
+    "climb": {
       "resolution": 70,
-      "vertices": 5428,
-      "triangles": 10860,
+      "vertices": 6230,
+      "triangles": 12456,
       "connectedBodyComponents": 1,
       "boundaryEdges": 0,
       "nonManifoldEdges": 0,
       "bounds": {
         "min": [
-          -0.4093737006187439,
-          -0.45427650213241577,
-          -0.3673069477081299
+          -0.7017259001731873,
+          -0.6489115953445435,
+          -0.3005213737487793
         ],
         "max": [
-          0.4093737006187439,
-          1.43064284324646,
-          0.5510392189025879
+          0.5759702324867249,
+          0.8697219491004944,
+          0.4766710102558136
         ]
       }
     },
@@ -123,5 +123,6 @@
       }
     }
   },
-  "reference": "https://smiski.com/e/products/series-1/"
+  "reference": "https://smiski.com/e/products/series-1/",
+  "climbingReference": "https://smiski.com/e/products/series-2/"
 }

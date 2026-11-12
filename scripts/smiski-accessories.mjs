@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 
 const finish = (name, color, roughness = .55) => new THREE.MeshStandardMaterial({ name, color, roughness });
 const leaf = finish('Green accessories', '#95ae64');
@@ -66,7 +67,7 @@ function cap(parent, head, material, brim, rotation, crownHeight = .226) {
   return hat;
 }
 
-export function artistProps(model, pose) {
+export function artistProps(model, pose, _skin, faceZ) {
   const palette = group(model, 'Paint palette', [.263, .849, .343]);
   palette.rotation.set(.17, -.24, .45);
   ellipsoid(palette, 'Palette', moss, [0, 0, 0], [.136, .205, .029]);
@@ -79,9 +80,22 @@ export function artistProps(model, pose) {
   const face = group(model, 'Moustache', pose.head);
   face.rotation.set(...pose.tilt);
   for (const side of [-1, 1]) {
-    const curl = ellipsoid(face, 'Moustache curl', leaf, [side * .061, -.223, .268], [.074, .029, .023]);
-    curl.rotation.z = side * .31;
-    ellipsoid(face, 'Curled tip', leaf, [side * .115, -.200, .259], [.029, .034, .021]).rotation.z = -side * .42;
+    const curl = new THREE.SphereGeometry(1, 24, 16);
+    const vertices = curl.getAttribute('position');
+    // Round the inner lobe and taper the outer tip upward. Fit the back to the cheek.
+    for (let i = 0; i < vertices.count; i++) {
+      const across = side * vertices.getX(i);
+      const tip = Math.max(0, across);
+      const x = .074 + .066 * across;
+      const y = -.235 + .056 * tip ** 2 + .029 * (1 - .46 * tip) * vertices.getY(i);
+      const z = faceZ(x, y) - .004 + .033 * vertices.getZ(i);
+      vertices.setXYZ(i, side * x, y, z);
+    }
+    curl.deleteAttribute('uv');
+    curl.deleteAttribute('normal');
+    const smoothCurl = mergeVertices(curl);
+    smoothCurl.computeVertexNormals();
+    mesh(face, 'Moustache curl', smoothCurl, leaf, [0, 0, 0]);
   }
 }
 

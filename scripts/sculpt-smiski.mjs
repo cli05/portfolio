@@ -184,12 +184,15 @@ function finishBody(geometry) {
   };
 }
 
+function faceZ(x, y) {
+  return .343 * Math.sqrt(Math.max(0, 1 - (x / jawWidth(y)) ** 2 - (y / .385) ** 2));
+}
+
 function createFace(pose, detailed) {
   const face = new THREE.Group();
   face.position.set(...pose.head);
   face.rotation.set(...pose.tilt);
-  const faceZ = (x, y) => .343 * Math.sqrt(Math.max(0, 1 - (x / jawWidth(y)) ** 2 - (y / .385) ** 2));
-  const { eyeY = -.118, mouthY = -.265, closedEyes, openMouth, hideMouth } = pose.face ?? {};
+  const { eyeY = -.118, mouthY = -.265, closedEyes, openMouth } = pose.face ?? {};
   for (const side of [-1, 1]) {
     const x = side * .114, y = eyeY, z = faceZ(x, y);
     if (closedEyes) {
@@ -215,7 +218,7 @@ function createFace(pose, detailed) {
     mouth.scale.set(.050, .015, .005);
     mouth.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, mouthY / .385 ** 2, z / .343 ** 2).normalize());
     face.add(mouth);
-  } else if (!hideMouth) {
+  } else {
     const mouthPoints = [];
     for (let i = 0; i <= 12; i++) {
       const x = (i / 12 - .5) * .114;
@@ -246,7 +249,7 @@ function createModel(name, buildPose, resolution, skin, detailed) {
   const body = new THREE.Mesh(geometry, skin);
   body.name = 'Continuous sculpt';
   model.add(body, createFace(pose, detailed));
-  pose.accessories?.(model, pose, skin);
+  pose.accessories?.(model, pose, skin, faceZ);
   if (pose.laptopMount) {
     const mount = new THREE.Object3D();
     mount.name = 'LaptopMount';

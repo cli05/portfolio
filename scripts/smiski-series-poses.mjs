@@ -21,7 +21,7 @@ function velazquez(ellipsoid, stroke) {
     [.086, .079, .070, .069], .027);
   return {
     head: [0, 1.478, -.006], tilt: [.045, .10, -.025],
-    face: { eyeY: -.059, mouthY: -.259, hideMouth: true },
+    face: { eyeY: -.059 },
     center: [0, .933, .025], half: 1.01, floor: .006, accessories: artistProps,
   };
 }

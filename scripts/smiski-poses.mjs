@@ -140,14 +140,13 @@ function seriesOneLounging(ellipsoid, stroke) {
 
 function lookingBack(ellipsoid, stroke) {
   // The body turns left while the head looks back over the near shoulder.
-  ellipsoid([.064, .528, .019], [.224, .218, .179], .057);
-  ellipsoid([.031, .743, .007], [.265, .273, .191], .063);
-  ellipsoid([-.048, .943, -.011], [.173, .177, .147], .055);
+  ellipsoid([.024, .668, .014], [.242, .365, .185], .065);
+  ellipsoid([-.046, .910, -.002], [.165, .195, .140], .079);
   ellipsoid([-.020, 1.105, -.001], [.092, .116, .090], .045);
   for (const side of [-1, 1]) {
     const z = side * .112;
-    const x = side < 0 ? .116 : -.101;
-    stroke([[.063, .479, z * .74], [x - .035, .268, z], [x, .102, z]], [.112, .101, .087], .042);
+    const x = side < 0 ? .102 : -.080;
+    stroke([[x * .50 + .032, .517, z * .73], [x, .316, z], [x - .012, .102, z]], [.119, .104, .087], .054);
     ellipsoid([x - .036, .080, z], [.129, .083, .094], .030);
   }
 

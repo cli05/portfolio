@@ -6,6 +6,7 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 export type SectionId = 'about' | 'projects' | 'interests' | 'contact';
 export interface ShelfController {
   focus(section: SectionId | null, immediate?: boolean): void;
+  setPanMode(enabled: boolean): void;
   setDimmed(value: boolean): void;
   dispose(): void;
 }
@@ -65,7 +66,7 @@ export async function createShelf(
   renderer.toneMappingExposure = 1.15;
   renderer.domElement.tabIndex = 0;
   renderer.domElement.setAttribute('role', 'img');
-  renderer.domElement.setAttribute('aria-label', 'A warmly lit wooden shelf with little green figures, a framed print, a laptop, a Rubik’s cube, a tennis ball, and an envelope. Drag to look around, scroll to zoom, or use Explore for keyboard navigation.');
+  renderer.domElement.setAttribute('aria-label', 'A warmly lit wooden shelf with little green figures, a framed print, a laptop, a Rubik’s cube, a tennis ball, and an envelope. Use the arrow keys to pan, Shift and arrow keys to rotate, or Explore to open a section.');
   host.prepend(renderer.domElement);
 
   const scene = new THREE.Scene();
@@ -73,7 +74,7 @@ export async function createShelf(
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = .09;
-  controls.enablePan = false;
+  controls.listenToKeyEvents(renderer.domElement);
   controls.rotateSpeed = .42;
   controls.zoomSpeed = .65;
   controls.minAzimuthAngle = -.46;
@@ -207,6 +208,8 @@ export async function createShelf(
   const rowYs = [2.55, 1.25, -.05, -1.35, -2.65];
   const widths = [7.55, 7.8, 8.0, 7.45, 7.0];
   const offsets = [-.65, .6, -.75, -.15, .85];
+  const shelfLeft = Math.min(...offsets.map((x, i) => x - widths[i]! / 2));
+  const shelfRight = Math.max(...offsets.map((x, i) => x + widths[i]! / 2));
   const plankDepth = .98;
   const plankCenterZ = .06;
   const shelfFront = plankCenterZ + plankDepth / 2;
@@ -361,6 +364,8 @@ export async function createShelf(
   const ids: SectionId[] = ['about', 'projects', 'interests', 'contact'];
   const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
   const targetPosition = new THREE.Vector3(), targetLook = new THREE.Vector3();
+  const panCorrection = new THREE.Vector3();
+  const activePointers = new Set<number>();
   let active: SectionId | null = null, hovering: SectionId | null = null;
   let tweening = false, dirty = true, disposed = false, dragging = false, resizedOnce = false;
   let startX = 0, startY = 0, lastFrame = 0;
@@ -385,8 +390,8 @@ export async function createShelf(
       targetPosition.set(.35, .95 * vertical, homeDistance());
     }
     controls.maxDistance = Math.max(15, homeDistance() * 1.22);
-    if (reduced || immediate) { camera.position.copy(targetPosition); controls.target.copy(targetLook); controls.update(); }
-    else tweening = true;
+    tweening = !reduced && !immediate;
+    if (!tweening) { camera.position.copy(targetPosition); controls.target.copy(targetLook); controls.update(); }
     dirty = true;
   }
   function resize() {
@@ -424,19 +429,39 @@ export async function createShelf(
     while (object && !object.userData.section) object = object.parent;
     return (object?.userData.section as SectionId | undefined) ?? null;
   }
-  function pointerDown(event: PointerEvent) { startX = event.clientX; startY = event.clientY; dragging = false; tweening = false; }
+  function pointerDown(event: PointerEvent) {
+    if (!activePointers.size) {
+      startX = event.clientX;
+      startY = event.clientY;
+      dragging = false;
+    }
+    activePointers.add(event.pointerId);
+    if (activePointers.size > 1) dragging = true;
+    tweening = false;
+  }
   function pointerMove(event: PointerEvent) {
-    if (event.buttons && Math.hypot(event.clientX - startX, event.clientY - startY) > 5) dragging = true;
+    if (activePointers.has(event.pointerId) && Math.hypot(event.clientX - startX, event.clientY - startY) > 5) dragging = true;
     const id = dragging || active ? null : hit(event);
     if (hovering !== id) { hovering = id; hover(id); }
     renderer.domElement.style.cursor = dragging ? 'grabbing' : id ? 'pointer' : 'grab';
   }
   function pointerUp(event: PointerEvent) {
-    if (!dragging && !active && Math.hypot(event.clientX - startX, event.clientY - startY) < 6) { const id = hit(event); if (id) select(id); }
+    if (!activePointers.delete(event.pointerId) || activePointers.size) return;
+    const plainClick = event.button === 0 && !event.shiftKey && !event.ctrlKey && !event.metaKey;
+    if (plainClick && !dragging && !active && Math.hypot(event.clientX - startX, event.clientY - startY) <= 5) {
+      const id = hit(event);
+      if (id) select(id);
+    }
     dragging = false;
   }
+  function pointerCancel(event: PointerEvent) {
+    activePointers.delete(event.pointerId);
+    dragging = activePointers.size > 0;
+    pointerLeave();
+  }
   function pointerLeave() { hovering = null; hover(null); }
-  function onWheel() { tweening = false; }
+  function interruptFocus() { tweening = false; }
+  function onKey(event: KeyboardEvent) { if (event.defaultPrevented) interruptFocus(); }
   function onChange() { dirty = true; }
   function onMotion(event: MediaQueryListEvent) { reduced = event.matches; if (reduced) focus(active, true); }
   function onContextLost(event: Event) { event.preventDefault(); }
@@ -444,12 +469,13 @@ export async function createShelf(
   renderer.domElement.addEventListener('pointerdown', pointerDown);
   renderer.domElement.addEventListener('pointermove', pointerMove);
   renderer.domElement.addEventListener('pointerup', pointerUp);
+  renderer.domElement.addEventListener('pointercancel', pointerCancel);
   renderer.domElement.addEventListener('pointerleave', pointerLeave);
-  renderer.domElement.addEventListener('wheel', onWheel, {passive:true});
+  renderer.domElement.addEventListener('keydown', onKey);
   renderer.domElement.addEventListener('webglcontextlost', onContextLost);
   renderer.domElement.addEventListener('webglcontextrestored', onContextRestored);
   controls.addEventListener('change', onChange);
-  controls.addEventListener('start', onWheel);
+  controls.addEventListener('start', interruptFocus);
   motion.addEventListener('change', onMotion);
 
   function positionHotspots() {
@@ -478,6 +504,15 @@ export async function createShelf(
       if (camera.position.distanceToSquared(targetPosition) + controls.target.distanceToSquared(targetLook) < .00002) tweening = false;
     }
     controls.update();
+    // Move the camera and target together at the shelf limits to preserve the viewing angle.
+    const target = controls.target;
+    panCorrection.set(
+      THREE.MathUtils.clamp(target.x, shelfLeft * spread, shelfRight * spread) - target.x,
+      THREE.MathUtils.clamp(target.y, -2.9 * vertical, 3.75 * vertical) - target.y,
+      THREE.MathUtils.clamp(target.z, .02, .15) - target.z,
+    );
+    target.add(panCorrection);
+    camera.position.add(panCorrection);
     if (dirty) { renderer.render(scene, camera); positionHotspots(); dirty = false; }
   });
   resize();
@@ -487,6 +522,10 @@ export async function createShelf(
 
   return {
     focus,
+    setPanMode(enabled) {
+      controls.mouseButtons.LEFT = enabled ? THREE.MOUSE.PAN : THREE.MOUSE.ROTATE;
+      controls.touches.ONE = enabled ? THREE.TOUCH.PAN : THREE.TOUCH.ROTATE;
+    },
     setDimmed(value) {
       keyLight.intensity = value ? 75 : 275; ambient.intensity = value ? .40 : 1.1; fill.intensity = value ? .26 : 1.05;
       green.emissive.set(value ? '#6c8c37' : '#000000'); green.emissiveIntensity = value ? .35 : 0;
@@ -499,8 +538,9 @@ export async function createShelf(
       renderer.domElement.removeEventListener('pointerdown', pointerDown);
       renderer.domElement.removeEventListener('pointermove', pointerMove);
       renderer.domElement.removeEventListener('pointerup', pointerUp);
+      renderer.domElement.removeEventListener('pointercancel', pointerCancel);
       renderer.domElement.removeEventListener('pointerleave', pointerLeave);
-      renderer.domElement.removeEventListener('wheel', onWheel);
+      renderer.domElement.removeEventListener('keydown', onKey);
       renderer.domElement.removeEventListener('webglcontextlost', onContextLost);
       renderer.domElement.removeEventListener('webglcontextrestored', onContextRestored);
       const geometries = new Set<THREE.BufferGeometry>(), materials = new Set<THREE.Material>();

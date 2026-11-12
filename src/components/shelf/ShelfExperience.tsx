@@ -54,6 +54,7 @@ export default function ShelfExperience() {
   const [active, setActive] = useState<SectionId | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [status, setStatus] = useState<'loading' | 'ready' | 'fallback'>('loading');
+  const [panMode, setPanMode] = useState(false);
   const [dimmed, setDimmed] = useState(false);
   const [hovered, setHovered] = useState<SectionId | null>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -121,7 +122,7 @@ export default function ShelfExperience() {
   const selected = sections.find(s => s.id === active);
   return <div class={`shelf-experience${active ? ' has-selection' : ''}${dimmed ? ' is-dimmed' : ''}`} data-status={status}>
     <h1 class="shelf-sr-only">Caleb Li: a shelf of things I make and care about</h1>
-    <div ref={stage} class="shelf-stage" data-hovered={hovered ?? ''}>
+    <div ref={stage} class="shelf-stage" data-hovered={hovered ?? ''} data-pan-mode={panMode}>
       <div class="shelf-vignette" aria-hidden="true" />
       <div class="shelf-hotspots" aria-label="Explore the shelf">
         {sections.map(s => <button key={s.id} type="button" data-hotspot={s.id}
@@ -141,8 +142,21 @@ export default function ShelfExperience() {
         {menuOpen && <nav class="shelf-menu" id="shelf-navigation" aria-label="Sections">{sections.map(s => <button key={s.id} type="button" onClick={() => navigate(s.id)}><span>{s.number}</span><span>{s.label}</span><span aria-hidden="true">↗</span></button>)}</nav>}
         <button ref={exploreButton} type="button" class="shelf-explore-button" aria-expanded={menuOpen} aria-controls="shelf-navigation" onClick={() => setMenuOpen(!menuOpen)}><span class="shelf-menu-icon" aria-hidden="true">{menuOpen ? '−' : '+'}</span> Explore</button>
       </div>
-      <p class="shelf-instructions" aria-live="polite">{status === 'loading' ? 'Setting things in place…' : status === 'ready' ? 'Drag to look around · Scroll to move closer' : ''}</p>
+      <p class="shelf-instructions" aria-live="polite">
+        {status === 'loading' && 'Setting things in place…'}
+        {status === 'ready' && <>
+          <span class="shelf-mouse-instructions">{panMode ? 'Drag to pan · Scroll to zoom' : 'Drag to rotate · Shift-drag to pan · Scroll to zoom'}</span>
+          <span class="shelf-touch-instructions">{panMode ? 'Drag to pan · Pinch to zoom' : 'Drag to rotate · Two fingers to pan · Pinch to zoom'}</span>
+        </>}
+      </p>
       <div class="shelf-camera-tools">
+        <button type="button" class="shelf-pan-button" disabled={status !== 'ready'} aria-label="Pan view" aria-pressed={panMode} title="Drag to pan"
+          onClick={() => { controller.current?.setPanMode(!panMode); setPanMode(!panMode); }}>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+            <path d="M12 3v18M3 12h18M9 6l3-3 3 3M9 18l3 3 3-3M6 9l-3 3 3 3M18 9l3 3-3 3"/>
+          </svg>
+          Pan
+        </button>
         <button type="button" onClick={() => controller.current?.focus(null)} disabled={status !== 'ready'} aria-label="Reset shelf view" title="Reset view">↺</button>
         <button type="button" disabled={status !== 'ready'} aria-label={dimmed ? 'Turn up the lights' : 'Dim the lights'} aria-pressed={dimmed} title={dimmed ? 'Warm light' : 'Evening light'} onClick={() => { controller.current?.setDimmed(!dimmed); setDimmed(!dimmed); }}>
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>

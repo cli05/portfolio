@@ -11,7 +11,7 @@ The entrance is the shelf itself. Warm illumination, shadows, real object depth,
 ## Try it
 
 1. Run `npm ci` and `npm run dev`, then visit `/shelf`.
-2. Drag the wall or shelf to look around; scroll or pinch to move closer.
+2. Drag to rotate and scroll or pinch to zoom. Turn on Pan to move across the shelf by dragging. You can also Shift-drag, drag with two fingers, or focus the scene and use the arrow keys.
 3. Hover the frame, laptop group, cube/ball group, or envelope for a label. Select the object or use Explore to open its content.
 4. Use the section navigation, browser back/forward, Back to shelf, or Escape. Direct links such as `/shelf#projects` open the same content.
 5. Use the lighting control to compare warm and dim illumination. Reset returns the camera to the full shelf.

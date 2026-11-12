@@ -31,6 +31,7 @@ button { color: inherit; }
 .shelf-vignette { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at 48% 42%, transparent 35%, oklch(16% .03 60 / .35) 100%); }
 .shelf-hotspots { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
 .shelf-hotspot { position: absolute; left: 0; top: 0; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; padding: 0; background: transparent; border: 0; pointer-events: auto; transform: translate(-50%, -50%); }
+.shelf-stage[data-pan-mode=true] .shelf-hotspot { pointer-events: none; }
 .shelf-hotspot:disabled { visibility: hidden; }
 .shelf-hotspot-dot { width: 6px; height: 6px; border-radius: 50%; background: oklch(96% .04 90); box-shadow: 0 0 0 5px oklch(95% .04 90 / .12); opacity: 0; transition: opacity .25s ease-out; }
 .shelf-stage:hover .shelf-hotspot-dot { opacity: .5; }
@@ -47,9 +48,16 @@ button { color: inherit; }
 .shelf-explore-button { padding-left: 0; }
 .shelf-menu-icon { font-size: 20px; line-height: 1; font-weight: 400; }
 .shelf-instructions { margin: 0; opacity: .68; text-align: center; }
+.shelf-touch-instructions { display: none; }
 .shelf-camera-tools { display: flex; align-items: center; }
 .shelf-camera-tools button { min-width: 44px; font-size: 23px; opacity: .75; }
 .shelf-camera-tools button:hover, .shelf-camera-tools button[aria-pressed=true] { opacity: 1; }
+.shelf-camera-tools .shelf-pan-button { font-size: 12px; gap: 5px; }
+.shelf-pan-button[aria-pressed=true] { border-radius: 5px; background: oklch(96% .04 90 / .14); }
+@media (pointer: coarse) {
+  .shelf-mouse-instructions { display: none; }
+  .shelf-touch-instructions { display: inline; }
+}
 .shelf-menu { position: absolute; bottom: 58px; left: -7px; width: 260px; padding: 10px 18px; background: oklch(24% .03 65 / .98); border: 1px solid oklch(65% .03 75 / .25); border-radius: 5px; animation: shelf-appear .25s ease-out; }
 .shelf-menu button { display: grid; grid-template-columns: 25px 1fr 16px; gap: 10px; align-items: center; width: 100%; min-height: 49px; text-align: left; padding: 0; background: transparent; border: 0; border-bottom: 1px solid oklch(70% .02 75 / .16); }
 .shelf-menu button:last-child { border-bottom: 0; }

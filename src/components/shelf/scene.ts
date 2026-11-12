@@ -9,7 +9,7 @@ export interface ShelfController {
   setDimmed(value: boolean): void;
   dispose(): void;
 }
-const poses = ['stand', 'climb', 'research', 'hug', 'think', 'wave', 'lie'] as const;
+const poses = ['stand', 'climb', 'research', 'hug', 'think', 'wave', 'lie', 'lounge'] as const;
 const plankTop = .0575;
 type Pose = (typeof poses)[number] | 'sit';
 type FigureColor = 'green' | 'teal';
@@ -178,7 +178,9 @@ export async function createShelf(
     group.rotation.y = yaw;
     group.scale.setScalar(scale);
     parent.add(group);
-    if (pose !== 'sit' && pose !== 'climb' && pose !== 'research') ground(group, 0, 0, pose === 'lie' ? 1.1 : .6);
+    if (pose !== 'sit' && pose !== 'climb' && pose !== 'research') {
+      ground(group, 0, 0, pose === 'lie' || pose === 'lounge' ? 1.1 : .6);
+    }
 
     // Clones reuse the pose meshes and materials, including the original facial marks.
     const sculpt = figures.get(pose)!.clone(true);
@@ -289,7 +291,7 @@ export async function createShelf(
   const badge = mesh(screen, new THREE.PlaneGeometry(.111, .111), new THREE.MeshStandardMaterial({ map: lidMark, transparent: true, roughness: .67 }), [0, lidHeight / 2, .017]);
   badge.castShadow = false;
   figure(projectsGroup, -.92, 'think', .32, .95);
-  figure(projectsGroup, 1.0, 'lie', -.12, .9, 'green', .20);
+  figure(projectsGroup, 1.0, 'lounge', -.12, .9, 'green', .20);
   extra(1, 2.55, 'stand', -.15, .82); extra(1, 3.6, 'hug', -.25, .76);
 
   extra(2, -3.65, 'wave', .12, .82); extra(2, -2.0, 'think', .18, .83);

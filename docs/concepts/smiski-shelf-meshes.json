@@ -1,6 +1,6 @@
 {
   "asset": "smiski-shelf.glb",
-  "bytes": 1618416,
+  "bytes": 1845396,
   "poses": {
     "stand": {
       "resolution": 70,
@@ -139,6 +139,26 @@
           0.9705630540847778,
           0.7427929043769836,
           0.42491593956947327
+        ]
+      }
+    },
+    "lounge": {
+      "resolution": 70,
+      "vertices": 5874,
+      "triangles": 11748,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.8836937546730042,
+          0.006009872071444988,
+          -0.3311610817909241
+        ],
+        "max": [
+          0.9421727657318115,
+          0.8977177739143372,
+          0.35482707619667053
         ]
       }
     }

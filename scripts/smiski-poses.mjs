@@ -111,6 +111,33 @@ function lounging(ellipsoid, stroke) {
   return {head:[-.486, .359, .052], tilt:[.048, -.041, .178], center:[.055, .35, .055], half:1.12, floor:.006};
 }
 
+function seriesOneLounging(ellipsoid, stroke) {
+  ellipsoid([-.205, .242, .014], [.235, .201, .171], .055);
+  ellipsoid([.106, .249, .014], [.319, .237, .218], .062);
+  ellipsoid([.361, .211, -.011], [.228, .193, .172], .053);
+  ellipsoid([-.338, .319, .018], [.131, .124, .114], .042);
+
+  // The near elbow bears the head's weight, with the hand tucked under the cheek.
+  stroke([[-.235, .283, .105], [-.281, .146, .201], [-.367, .084, .218], [-.485, .113, .242], [-.562, .193, .227]],
+    [.086, .089, .087, .073, .066], .028);
+  ellipsoid([-.600, .234, .205], [.080, .097, .069], .028);
+
+  // The other arm rests along the far side of the belly.
+  stroke([[-.241, .322, -.109], [-.095, .429, -.150], [.105, .461, -.151], [.290, .397, -.106]],
+    [.083, .074, .067, .062], .028);
+
+  stroke([[.396, .232, -.077], [.602, .195, -.102], [.775, .148, -.105]], [.121, .104, .085], .037);
+  ellipsoid([.812, .133, -.092], [.103, .094, .092], .031);
+  stroke([[.405, .138, .073], [.602, .104, .094], [.795, .085, .077]], [.109, .092, .077], .035);
+  ellipsoid([.838, .081, .103], [.107, .079, .097], .031);
+
+  return {
+    head: [-.507, .526, .012], tilt: [.015, -.11, .93],
+    face: { eyeY: -.087, mouthY: -.245 },
+    center: [.004, .444, .045], half: 1.01, floor: .006,
+  };
+}
+
 export const shelfPoses = {
   stand: standing,
   climb: climbing,
@@ -119,4 +146,5 @@ export const shelfPoses = {
   think: (ellipsoid, stroke) => huggingKnees(ellipsoid, stroke, true),
   wave: (ellipsoid, stroke) => standing(ellipsoid, stroke, true),
   lie: lounging,
+  lounge: seriesOneLounging,
 };

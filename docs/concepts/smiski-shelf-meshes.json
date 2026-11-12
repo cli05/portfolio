@@ -1,6 +1,6 @@
 {
   "asset": "smiski-shelf.glb",
-  "bytes": 1845396,
+  "bytes": 2610684,
   "poses": {
     "stand": {
       "resolution": 70,
@@ -159,6 +159,66 @@
           0.9421727657318115,
           0.8977177739143372,
           0.35482707619667053
+        ]
+      }
+    },
+    "lookback": {
+      "resolution": 70,
+      "vertices": 6530,
+      "triangles": 13056,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.5095942616462708,
+          0.006016687024384737,
+          -0.32837846875190735
+        ],
+        "max": [
+          0.3424634635448456,
+          1.7575846910476685,
+          0.3604414165019989
+        ]
+      }
+    },
+    "peek": {
+      "resolution": 70,
+      "vertices": 7358,
+      "triangles": 14712,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.2627442479133606,
+          0.006019366439431906,
+          -0.2790302634239197
+        ],
+        "max": [
+          0.7150052785873413,
+          1.375071406364441,
+          0.4071108102798462
+        ]
+      }
+    },
+    "groupthink": {
+      "resolution": 70,
+      "vertices": 6078,
+      "triangles": 12156,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.3322261869907379,
+          0.0060448492877185345,
+          -0.29249611496925354
+        ],
+        "max": [
+          0.4538435935974121,
+          1.820881962776184,
+          0.39269304275512695
         ]
       }
     }

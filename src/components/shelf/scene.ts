@@ -9,7 +9,7 @@ export interface ShelfController {
   setDimmed(value: boolean): void;
   dispose(): void;
 }
-const poses = ['stand', 'climb', 'research', 'hug', 'think', 'wave', 'lie', 'lounge'] as const;
+const poses = ['stand', 'climb', 'research', 'hug', 'think', 'wave', 'lie', 'lounge', 'lookback', 'peek', 'groupthink'] as const;
 const plankTop = .0575;
 type Pose = (typeof poses)[number] | 'sit';
 type FigureColor = 'green' | 'teal';
@@ -296,7 +296,7 @@ export async function createShelf(
 
   extra(2, -3.65, 'wave', .12, .82); extra(2, -2.0, 'think', .18, .83);
   extra(2, -.48, 'sit', 0, .84, 'green', shelfFront);
-  for (let i = 0; i < 3; i++) extra(2, .65 + i * .62, 'stand', -.12 + i * .1, .62, 'teal');
+  for (let i = 0; i < 3; i++) extra(2, .65 + i * .62, 'groupthink', -.12 + i * .1, .62, 'teal');
   extra(2, 2.65, 'hug', -.18, .74);
 
   const interests = section('interests', 3, -.2);
@@ -314,7 +314,7 @@ export async function createShelf(
     cube.add(faceGroup);
     for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) box(faceGroup, stickerMats[(face + r + (c === 1 ? 2 : 0)) % 6]!, [.174, .174, .008], [(c - 1) * .197, (r - 1) * .197, .307], .009);
   }
-  figure(interests, -.92, 'stand', .24, .86);
+  figure(interests, -.92, 'lookback', .15, .86);
   figure(interests, .65, 'sit', 0, .72, 'green', shelfFront);
   const tennis = new THREE.Group(); tennis.position.set(small ? 1.17 : 1.65, .35, .13); tennis.rotation.z = .4; interests.add(tennis);
   const tennisMat = material('#b2ba45', .95); ball(tennis, tennisMat, [0, 0, 0], [.285, .285, .285]);
@@ -337,7 +337,7 @@ export async function createShelf(
   line(envelope, [[-.35, .44, .032], [0, .20, .037], [.35, .44, .032]], envelopeLine, .005);
   line(envelope, [[-.35, .025, .032], [-.13, .20, .033]], envelopeLine, .004);
   line(envelope, [[.35, .025, .032], [.13, .20, .033]], envelopeLine, .004);
-  figure(contact, .18, 'hug', .1, .8, 'green', -.05);
+  figure(contact, .235, 'peek', .04, .8, 'green', .135);
   extra(4, -.6, 'sit', 0, .92, 'green', shelfFront); extra(4, 3.25, 'lie', -.14, .8);
   for (let i = 0; i < 2; i++) extra(4, -1.55 + i * .5, 'stand', -.1, .48);
 

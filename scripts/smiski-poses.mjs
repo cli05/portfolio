@@ -1,5 +1,7 @@
+import { seriesPoses } from './smiski-series-poses.mjs';
+
 // Positions are in sculpt units. The shelf models are scaled down at export.
-export function huggingKnees(ellipsoid, stroke, thinking = false) {
+export function huggingKnees(ellipsoid, stroke) {
   ellipsoid([0, .77, -.105], [.207, .235, .177], .075);
   ellipsoid([0, .545, -.075], [.225, .245, .196], .075);
   ellipsoid([0, .215, -.055], [.236, .222, .205], .065);
@@ -12,39 +14,13 @@ export function huggingKnees(ellipsoid, stroke, thinking = false) {
     ellipsoid([x, .097, .60], [.103, .092, .167], .04);
   }
 
-  if (thinking) {
-    stroke([[-.145, .865, -.05], [-.265, .743, .13], [-.283, .595, .31], [-.215, .804, .335], [-.153, .984, .273]], [.092, .083, .074, .07, .077]);
-  } else {
-    stroke([[-.145, .865, -.05], [-.255, .77, .04], [-.305, .625, .25], [-.18, .552, .44], [.035, .545, .475]], [.092, .086, .074, .072, .083]);
-  }
+  stroke([[-.145, .865, -.05], [-.255, .77, .04], [-.305, .625, .25], [-.18, .552, .44], [.035, .545, .475]], [.092, .086, .074, .072, .083]);
   stroke([[.145, .865, -.05], [.25, .75, .055], [.287, .61, .25], [.145, .522, .445], [-.05, .522, .48]], [.092, .085, .073, .071, .081]);
 
   return {
-    head: thinking ? [-.065, 1.25, .04] : [0, 1.28, -.055],
-    tilt: thinking ? [.14, -.08, -.10] : [.09, 0, 0],
+    head: [0, 1.28, -.055],
+    tilt: [.09, 0, 0],
     center: [0, .81, .14], half: 1.1, floor: .006,
-  };
-}
-
-function standing(ellipsoid, stroke, waving = false) {
-  ellipsoid([0, .65, -.055], [.214, .22, .175], .075);
-  ellipsoid([0, .87, -.025], [.203, .263, .174], .085);
-  ellipsoid([0, 1.135, -.045], [.182, .228, .148], .07);
-  ellipsoid([0, 1.32, -.04], [.091, .13, .087], .065);
-  for (const side of [-1, 1]) {
-    const x = side * .137;
-    stroke([[side * .112, .675, -.025], [x, .392, .018], [x, .12, .041]], [.112, .096, .078], .052);
-    ellipsoid([x, .09, .118], [.098, .091, .143], .045);
-    if (waving && side === 1) {
-      stroke([[.136, 1.18, -.035], [.326, 1.10, .01], [.506, 1.222, .058], [.565, 1.47, .082]], [.094, .081, .065, .078]);
-    } else {
-      stroke([[side * .136, 1.18, -.035], [side * .242, .95, .016], [side * .245, .685, .091]], [.095, .075, .077]);
-    }
-  }
-  return {
-    head: [waving ? .035 : -.017, 1.595, -.04],
-    tilt: [waving ? .018 : .08, 0, waving ? -.13 : .034],
-    center: [0, 1.0, .05], half: 1.18, floor: .006,
   };
 }
 
@@ -99,19 +75,6 @@ function researching(ellipsoid, stroke) {
     center: [0, .49, -.035], half: .94, shelfEdge: true,
     laptopMount: [0, .23, .248],
   };
-}
-
-function lounging(ellipsoid, stroke) {
-  ellipsoid([.019, .174, -.009], [.369, .176, .195], .075);
-  ellipsoid([.319, .148, -.035], [.243, .15, .182], .068);
-  ellipsoid([-.257, .25, .028], [.14, .115, .119], .061);
-  stroke([[-.187, .216, .138], [-.19, .109, .316], [-.407, .079, .353], [-.582, .074, .324]], [.084, .072, .063, .067]);
-  stroke([[-.208, .205, -.153], [-.36, .097, -.23], [-.546, .078, -.199]], [.083, .069, .064]);
-  for (const side of [-1, 1]) {
-    stroke([[.389, .146, side * .101], [.617, .099, side * .115], [.818 + side * .029, .084, side * .123]], [.104, .088, .072], .045);
-    ellipsoid([.84 + side * .029, .078, side * .123], [.106, .079, .085], .032);
-  }
-  return {head:[-.486, .359, .052], tilt:[.048, -.041, .178], center:[.055, .35, .055], half:1.12, floor:.006};
 }
 
 function seriesOneLounging(ellipsoid, stroke) {
@@ -209,15 +172,12 @@ function groupThink(ellipsoid, stroke) {
 }
 
 export const shelfPoses = {
-  stand: standing,
   climb: climbing,
   research: researching,
   hug: huggingKnees,
-  think: (ellipsoid, stroke) => huggingKnees(ellipsoid, stroke, true),
-  wave: (ellipsoid, stroke) => standing(ellipsoid, stroke, true),
-  lie: lounging,
   lounge: seriesOneLounging,
   lookback: lookingBack,
   peek: peeking,
   groupthink: groupThink,
+  ...seriesPoses,
 };

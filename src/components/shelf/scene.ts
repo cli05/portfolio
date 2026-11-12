@@ -9,7 +9,11 @@ export interface ShelfController {
   setDimmed(value: boolean): void;
   dispose(): void;
 }
-const poses = ['stand', 'climb', 'research', 'hug', 'think', 'wave', 'lie', 'lounge', 'lookback', 'peek', 'groupthink'] as const;
+const poses = [
+  'climb', 'research', 'hug', 'lounge', 'lookback', 'peek', 'groupthink',
+  'velazquez', 'airplane', 'idea', 'wrench', 'cactus', 'traffic', 'measure',
+  'triangle', 'stretch', 'skate', 'beforeRest', 'reading', 'sunbathe',
+] as const;
 const plankTop = .0575;
 type Pose = (typeof poses)[number] | 'sit';
 type FigureColor = 'green' | 'teal';
@@ -178,8 +182,8 @@ export async function createShelf(
     group.rotation.y = yaw;
     group.scale.setScalar(scale);
     parent.add(group);
-    if (pose !== 'sit' && pose !== 'climb' && pose !== 'research') {
-      ground(group, 0, 0, pose === 'lie' || pose === 'lounge' ? 1.1 : .6);
+    if (pose !== 'sit' && pose !== 'climb' && pose !== 'research' && pose !== 'reading') {
+      ground(group, 0, 0, pose === 'sunbathe' || pose === 'lounge' ? 1.1 : .6);
     }
 
     // Clones reuse the pose meshes and materials, including the original facial marks.
@@ -187,7 +191,7 @@ export async function createShelf(
     sculpt.traverse(object => {
       if (!(object instanceof THREE.Mesh)) return;
       if (object.material === green && color === 'teal') object.material = teal;
-      object.castShadow = object.material === green || object.material === teal;
+      object.castShadow = object.material.name !== 'Printed face' && object.material.name !== 'Accessory markings';
       object.receiveShadow = true;
     });
     group.add(sculpt);
@@ -254,8 +258,8 @@ export async function createShelf(
     ctx.fillStyle = '#a1aa81'; ctx.beginPath(); ctx.moveTo(0, 143); ctx.lineTo(87, 88); ctx.lineTo(128, 120); ctx.lineTo(128, 160); ctx.lineTo(0, 160); ctx.fill();
   });
   mesh(frame, new THREE.PlaneGeometry(.46, .60), new THREE.MeshStandardMaterial({map:print, roughness:1}), [0, .405, .055]);
-  extra(0, .15, 'wave', -.12, .82); extra(0, 1.15, 'sit', 0, .72, 'green', shelfFront);
-  extra(0, -3.45, 'stand', .2, .7);
+  extra(0, .15, 'airplane', -.12, .82); extra(0, 1.15, 'sit', 0, .72, 'green', shelfFront);
+  extra(0, -3.45, 'velazquez', .20, .74);
 
   const projectsGroup = section('projects', 1, -.2);
   const researcher = figure(projectsGroup, 0, 'research', -.28, .96, 'green', shelfFront);
@@ -290,14 +294,15 @@ export async function createShelf(
   });
   const badge = mesh(screen, new THREE.PlaneGeometry(.111, .111), new THREE.MeshStandardMaterial({ map: lidMark, transparent: true, roughness: .67 }), [0, lidHeight / 2, .017]);
   badge.castShadow = false;
-  figure(projectsGroup, -.92, 'think', .32, .95);
+  figure(projectsGroup, -.92, 'idea', .18, .92);
   figure(projectsGroup, 1.0, 'lounge', -.12, .9, 'green', .20);
-  extra(1, 2.55, 'stand', -.15, .82); extra(1, 3.6, 'hug', -.25, .76);
+  extra(1, 3.12, 'wrench', .46, .78, 'green', .13);
+  extra(1, 4.00, 'cactus', .15, .71, 'green', .14);
 
-  extra(2, -3.65, 'wave', .12, .82); extra(2, -2.0, 'think', .18, .83);
+  extra(2, -3.65, 'traffic', .12, .80); extra(2, -2.0, 'measure', .12, .83);
   extra(2, -.48, 'sit', 0, .84, 'green', shelfFront);
   for (let i = 0; i < 3; i++) extra(2, .65 + i * .62, 'groupthink', -.12 + i * .1, .62, 'teal');
-  extra(2, 2.65, 'hug', -.18, .74);
+  extra(2, 2.75, 'triangle', -.13, .73);
 
   const interests = section('interests', 3, -.2);
   const cube = new THREE.Group(); cube.position.set(-.15, .38, .17); cube.rotation.y = .24; cube.rotation.z = .02; interests.add(cube);
@@ -316,7 +321,7 @@ export async function createShelf(
   }
   figure(interests, -.92, 'lookback', .15, .86);
   figure(interests, .65, 'sit', 0, .72, 'green', shelfFront);
-  const tennis = new THREE.Group(); tennis.position.set(small ? 1.17 : 1.65, .35, .13); tennis.rotation.z = .4; interests.add(tennis);
+  const tennis = new THREE.Group(); tennis.rotation.z = .4; interests.add(tennis);
   const tennisMat = material('#b2ba45', .95); ball(tennis, tennisMat, [0, 0, 0], [.285, .285, .285]);
   const seamPoints: Point[] = [];
   for (let i = 0; i <= 100; i++) {
@@ -325,10 +330,9 @@ export async function createShelf(
     seamPoints.push([v.x, v.y, v.z]);
   }
   line(tennis, seamPoints, paper, .009);
-  figure(interests, 2.3, 'hug', -.28, .86);
+  const stretching = figure(interests, 2.30, 'stretch', -.24, .84, 'green', .10);
   extra(3, -3.1, 'sit', 0, .88, 'green', shelfFront);
-  const interestExtra = extra(3, 3.1, 'wave', -.16, .72);
-  interestExtra.visible = !small;
+  const skater = extra(3, 3.1, 'skate', -.16, .72);
 
   const contact = section('contact', 4, 1.5);
   const envelope = new THREE.Group(); envelope.position.set(0, .075, .33); envelope.rotation.y = -.13; contact.add(envelope);
@@ -338,8 +342,21 @@ export async function createShelf(
   line(envelope, [[-.35, .025, .032], [-.13, .20, .033]], envelopeLine, .004);
   line(envelope, [[.35, .025, .032], [.13, .20, .033]], envelopeLine, .004);
   figure(contact, .235, 'peek', .04, .8, 'green', .135);
-  extra(4, -.6, 'sit', 0, .92, 'green', shelfFront); extra(4, 3.25, 'lie', -.14, .8);
-  for (let i = 0; i < 2; i++) extra(4, -1.55 + i * .5, 'stand', -.1, .48);
+  extra(4, -.6, 'sit', 0, .92, 'green', shelfFront);
+  extra(4, 3.25, 'sunbathe', -.14, .80, 'green', .18);
+  const bedtime = extra(4, -1.55, 'beforeRest', -.10, .50);
+  extra(4, -1.08, 'reading', .03, .51, 'green', shelfFront);
+
+  function arrangeLowerShelves() {
+    tennis.position.set(small ? 1.05 : 1.62, .35, small ? -.11 : .13);
+    stretching.position.set(small ? 1.35 : 2.25, plankTop, small ? .33 : .10);
+    ladders[2]!.position.x = small ? 1.62 : 2.35;
+    skater.position.x = small ? 2.03 : 3.10;
+    skater.position.z = small ? -.16 : .16;
+    skater.scale.setScalar(small ? .66 : .72);
+    bedtime.position.x = small ? -1.51 : -1.55;
+  }
+  arrangeLowerShelves();
 
   const ids: SectionId[] = ['about', 'projects', 'interests', 'contact'];
   const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
@@ -387,8 +404,7 @@ export async function createShelf(
         ladder.position.y = rows[upper + 1]!.position.y + .06;
         ladder.scale.y = vertical / initialVertical;
       });
-      interestExtra.visible = !small;
-      tennis.position.x = small ? 1.17 : 1.65;
+      arrangeLowerShelves();
       renderer.shadowMap.needsUpdate = true;
     }
     renderer.setSize(host.clientWidth, host.clientHeight);

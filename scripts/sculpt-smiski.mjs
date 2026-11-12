@@ -189,9 +189,18 @@ function createFace(pose, detailed) {
   face.position.set(...pose.head);
   face.rotation.set(...pose.tilt);
   const faceZ = (x, y) => .343 * Math.sqrt(Math.max(0, 1 - (x / jawWidth(y)) ** 2 - (y / .385) ** 2));
-  const { eyeY = -.118, mouthY = -.265 } = pose.face ?? {};
+  const { eyeY = -.118, mouthY = -.265, closedEyes, openMouth, hideMouth } = pose.face ?? {};
   for (const side of [-1, 1]) {
     const x = side * .114, y = eyeY, z = faceZ(x, y);
+    if (closedEyes) {
+      const points = [-1, -.5, 0, .5, 1].map(step => {
+        const eyeX = x + step * .043;
+        const eyeY = y + .014 * step ** 2;
+        return new THREE.Vector3(eyeX, eyeY, faceZ(eyeX, eyeY) + .002);
+      });
+      face.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 12, .0065, 6, false), faceInk));
+      continue;
+    }
     const eye = new THREE.Mesh(new THREE.SphereGeometry(1, detailed ? 20 : 12, detailed ? 12 : 8), faceInk);
     eye.name = side < 0 ? 'Left printed eye' : 'Right printed eye';
     eye.position.set(x, y, z + .001);
@@ -199,15 +208,24 @@ function createFace(pose, detailed) {
     eye.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(x / .365 ** 2, y / .385 ** 2, z / .343 ** 2).normalize());
     face.add(eye);
   }
-  const mouthPoints = [];
-  for (let i = 0; i <= 12; i++) {
-    const x = (i / 12 - .5) * .114;
-    const y = mouthY - .008 * (x / .057) ** 2;
-    mouthPoints.push(new THREE.Vector3(x, y, faceZ(x, y) + .0015));
+  if (openMouth) {
+    const mouth = new THREE.Mesh(new THREE.SphereGeometry(1, 14, 8), faceInk);
+    const z = faceZ(0, mouthY);
+    mouth.position.set(0, mouthY, z + .001);
+    mouth.scale.set(.050, .015, .005);
+    mouth.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, mouthY / .385 ** 2, z / .343 ** 2).normalize());
+    face.add(mouth);
+  } else if (!hideMouth) {
+    const mouthPoints = [];
+    for (let i = 0; i <= 12; i++) {
+      const x = (i / 12 - .5) * .114;
+      const y = mouthY - .008 * (x / .057) ** 2;
+      mouthPoints.push(new THREE.Vector3(x, y, faceZ(x, y) + .0015));
+    }
+    const mouth = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(mouthPoints), detailed ? 16 : 12, .0062, 6, false), faceInk);
+    mouth.name = 'Small flat mouth';
+    face.add(mouth);
   }
-  const mouth = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(mouthPoints), detailed ? 16 : 12, .0062, 6, false), faceInk);
-  mouth.name = 'Small flat mouth';
-  face.add(mouth);
   if (!detailed) {
     // Combine the three facial marks into one draw call per shelf figure.
     const geometries = face.children.map(mesh => {
@@ -228,6 +246,7 @@ function createModel(name, buildPose, resolution, skin, detailed) {
   const body = new THREE.Mesh(geometry, skin);
   body.name = 'Continuous sculpt';
   model.add(body, createFace(pose, detailed));
+  pose.accessories?.(model, pose, skin);
   if (pose.laptopMount) {
     const mount = new THREE.Object3D();
     mount.name = 'LaptopMount';

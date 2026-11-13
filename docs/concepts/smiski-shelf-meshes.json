@@ -1,0 +1,409 @@
+{
+  "asset": "smiski-shelf.glb",
+  "bytes": 7246736,
+  "poses": {
+    "climb": {
+      "resolution": 70,
+      "vertices": 7144,
+      "triangles": 14284,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.5820654034614563,
+          -0.002096576150506735,
+          -0.4129122197628021
+        ],
+        "max": [
+          0.5210737586021423,
+          0.9418959021568298,
+          0.2731480002403259
+        ]
+      }
+    },
+    "research": {
+      "resolution": 70,
+      "vertices": 7340,
+      "triangles": 14676,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.36437806487083435,
+          -0.3643031120300293,
+          -0.4915733337402344
+        ],
+        "max": [
+          0.3644857108592987,
+          1.368059754371643,
+          0.3610609173774719
+        ]
+      }
+    },
+    "hug": {
+      "resolution": 70,
+      "vertices": 6898,
+      "triangles": 13804,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.38944220542907715,
+          0.006007164251059294,
+          -0.39788272976875305
+        ],
+        "max": [
+          0.3744867444038391,
+          1.6642016172409058,
+          0.7627371549606323
+        ]
+      }
+    },
+    "lounge": {
+      "resolution": 70,
+      "vertices": 5874,
+      "triangles": 11748,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.8836937546730042,
+          0.006009872071444988,
+          -0.3311610817909241
+        ],
+        "max": [
+          0.9421727657318115,
+          0.8977177739143372,
+          0.35482707619667053
+        ]
+      }
+    },
+    "lookback": {
+      "resolution": 70,
+      "vertices": 6496,
+      "triangles": 12988,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.5095942616462708,
+          0.006016770377755165,
+          -0.32837846875190735
+        ],
+        "max": [
+          0.3424634635448456,
+          1.7575846910476685,
+          0.3604414165019989
+        ]
+      }
+    },
+    "peek": {
+      "resolution": 70,
+      "vertices": 7358,
+      "triangles": 14712,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.2627442479133606,
+          0.006019366439431906,
+          -0.2790302634239197
+        ],
+        "max": [
+          0.7150052785873413,
+          1.375071406364441,
+          0.4071108102798462
+        ]
+      }
+    },
+    "groupthink": {
+      "resolution": 70,
+      "vertices": 6078,
+      "triangles": 12156,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.3322261869907379,
+          0.0060448492877185345,
+          -0.29249611496925354
+        ],
+        "max": [
+          0.4538435935974121,
+          1.820881962776184,
+          0.39269304275512695
+        ]
+      }
+    },
+    "velazquez": {
+      "resolution": 70,
+      "vertices": 5826,
+      "triangles": 11648,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.3643936812877655,
+          0.006058285944163799,
+          -0.34889909625053406
+        ],
+        "max": [
+          0.3643590211868286,
+          1.862500548362732,
+          0.378899484872818
+        ]
+      }
+    },
+    "airplane": {
+      "resolution": 70,
+      "vertices": 10582,
+      "triangles": 21164,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.3906843364238739,
+          0.006001732312142849,
+          -0.3827265501022339
+        ],
+        "max": [
+          0.4862203598022461,
+          1.4004219770431519,
+          0.510220468044281
+        ]
+      }
+    },
+    "idea": {
+      "resolution": 70,
+      "vertices": 10692,
+      "triangles": 21388,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.3834598958492279,
+          0.005999993998557329,
+          -0.33657583594322205
+        ],
+        "max": [
+          0.3828974664211273,
+          1.380968451499939,
+          0.45535191893577576
+        ]
+      }
+    },
+    "wrench": {
+      "resolution": 70,
+      "vertices": 6848,
+      "triangles": 13692,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.34548744559288025,
+          0.0060083321295678616,
+          -0.3632757067680359
+        ],
+        "max": [
+          0.501481294631958,
+          1.7614833116531372,
+          0.4189879894256592
+        ]
+      }
+    },
+    "cactus": {
+      "resolution": 70,
+      "vertices": 6450,
+      "triangles": 12900,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.4691220223903656,
+          0.0060288067907094955,
+          -0.3336077630519867
+        ],
+        "max": [
+          0.4608357548713684,
+          1.8561463356018066,
+          0.43417853116989136
+        ]
+      }
+    },
+    "traffic": {
+      "resolution": 70,
+      "vertices": 7582,
+      "triangles": 15160,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.5972018241882324,
+          0.0060257017612457275,
+          -0.34834304451942444
+        ],
+        "max": [
+          0.6437639594078064,
+          1.6582995653152466,
+          0.3383142650127411
+        ]
+      }
+    },
+    "measure": {
+      "resolution": 70,
+      "vertices": 8192,
+      "triangles": 16380,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.5164342522621155,
+          0.006006150972098112,
+          -0.33573806285858154
+        ],
+        "max": [
+          0.6279165148735046,
+          1.4924932718276978,
+          0.3641854226589203
+        ]
+      }
+    },
+    "triangle": {
+      "resolution": 70,
+      "vertices": 7904,
+      "triangles": 15808,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.6940375566482544,
+          0.006008441559970379,
+          -0.3558337986469269
+        ],
+        "max": [
+          0.6223378777503967,
+          1.5943121910095215,
+          0.36891716718673706
+        ]
+      }
+    },
+    "stretch": {
+      "resolution": 70,
+      "vertices": 10224,
+      "triangles": 20448,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.42542046308517456,
+          0.005999983754009008,
+          -0.269620805978775
+        ],
+        "max": [
+          0.44707727432250977,
+          1.291835904121399,
+          0.5005367398262024
+        ]
+      }
+    },
+    "skate": {
+      "resolution": 70,
+      "vertices": 5640,
+      "triangles": 11276,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.5308576822280884,
+          0.13152295351028442,
+          -0.3086482286453247
+        ],
+        "max": [
+          0.5560876131057739,
+          1.8283028602600098,
+          0.38053712248802185
+        ]
+      }
+    },
+    "beforeRest": {
+      "resolution": 70,
+      "vertices": 6790,
+      "triangles": 13576,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.3794735074043274,
+          0.006044184789061546,
+          -0.34900686144828796
+        ],
+        "max": [
+          0.3496134877204895,
+          1.6110811233520508,
+          0.35760074853897095
+        ]
+      }
+    },
+    "reading": {
+      "resolution": 70,
+      "vertices": 7658,
+      "triangles": 15312,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.3616029620170593,
+          -0.3355129063129425,
+          -0.4819484353065491
+        ],
+        "max": [
+          0.36764419078826904,
+          1.320435881614685,
+          0.2637695074081421
+        ]
+      }
+    },
+    "sunbathe": {
+      "resolution": 70,
+      "vertices": 5782,
+      "triangles": 11564,
+      "connectedBodyComponents": 1,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "min": [
+          -0.8463512063026428,
+          0.006001597736030817,
+          -0.35736221075057983
+        ],
+        "max": [
+          0.85789555311203,
+          0.7518356442451477,
+          0.34429192543029785
+        ]
+      }
+    }
+  },
+  "reference": "https://smiski.com/e/products/series-1/",
+  "climbingReference": "https://smiski.com/e/products/series-2/",
+  "researchingReference": "https://smiski.com/e/products/work-series/"
+}

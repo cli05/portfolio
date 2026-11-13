@@ -1,0 +1,23 @@
+{
+  "asset": "smiski-hugging-knees-study.glb",
+  "resolution": 160,
+  "vertices": 36148,
+  "triangles": 72304,
+  "connectedBodyComponents": 1,
+  "boundaryEdges": 0,
+  "nonManifoldEdges": 0,
+  "bounds": {
+    "min": [
+      -0.3917308449745178,
+      0.00599998002871871,
+      -0.39825165271759033
+    ],
+    "max": [
+      0.3759373724460602,
+      1.664552092552185,
+      0.7661166191101074
+    ]
+  },
+  "bytes": 1334592,
+  "reference": "https://smiski.com/e/products/series-1/"
+}

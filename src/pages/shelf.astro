@@ -1,0 +1,21 @@
+---
+import ShelfExperience from '../components/shelf/ShelfExperience';
+import '../styles/shelf.css';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A little shelf of things Caleb Li makes and cares about. Explore projects, interests, and the person behind them." />
+    <meta name="robots" content="noindex" />
+    <title>Caleb's shelf</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <ShelfExperience client:load />
+    <noscript>
+      <div class="shelf-no-script"><h1>Caleb's shelf</h1><p>This interactive study needs JavaScript.</p><a href="/">Visit the portfolio</a></div>
+    </noscript>
+  </body>
+</html>
